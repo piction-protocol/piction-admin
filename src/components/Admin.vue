@@ -6,10 +6,10 @@
 
 <script>
   export default {
-    name: 'Wallet',
+    name: 'Admin',
     data() {
       return {
-        msg: 'PXL Wallet'
+        msg: 'Admin'
       }
     }
   }
