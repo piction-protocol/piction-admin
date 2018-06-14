@@ -11,10 +11,16 @@ Vue.config.productionTip = false
 
 Vue.use(BootstrapVue);
 
+if (web3 && web3.currentProvider) {
+  web3 = new Web3(web3.currentProvider)
+} else {
+  web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'))
+}
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {App},
   template: '<App/>'
 })
