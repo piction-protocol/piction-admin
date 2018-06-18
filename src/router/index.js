@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Wallet from '@/components/Wallet'
-import Admin from '@/components/Admin'
+import PXL from '@/components/admin/pxl/PXL'
 
 Vue.use(Router)
 
@@ -11,10 +11,15 @@ export default new Router({
       path: '/',
       name: 'Wallet',
       component: Wallet
-    }, {
+    },
+    {
       path: '/admin',
-      name: 'Admin',
-      component: Admin
+      redirect: '/admin/pxl',
+    },
+    {
+      path: '/admin/pxl',
+      name: 'PXL',
+      component: PXL
     }
   ]
 })

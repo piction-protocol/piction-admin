@@ -1,0 +1,38 @@
+<template>
+  <div>
+    <b-alert show align="left">
+      <div>TOTAL SUPPLY : {{totalSupply}} PXL</div>
+      <div>CONTRACT ADDRESS : {{contractAddress}}</div>
+    </b-alert>
+  </div>
+</template>
+
+<script>
+  import BigNumber from 'bignumber.js';
+
+  export default {
+    name: 'PXLContractInfo',
+    data() {
+      return {
+        totalSupply: null,
+        contractAddress: process.env.CONTRACT_ADDRESS.PXL
+      }
+    },
+    methods: {
+      getTotalSupply() {
+        this.$parent.contract.methods.totalSupply().call((err, receipt) => {
+          this.totalSupply = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
+        });
+      }
+    },
+    created() {
+      this.getTotalSupply();
+      this.$EventBus.$on('setTotalSupply', () => this.getTotalSupply());
+    },
+  }
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+
+</style>

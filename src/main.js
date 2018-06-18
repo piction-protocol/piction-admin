@@ -10,10 +10,26 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.config.productionTip = false
 Vue.use(BootstrapVue);
 
+Vue.mixin({
+  methods: {
+    getEtherscanURL(hash) {
+      if (process.env.NODE_ENV == 'production') {
+        return `https://etherscan.io/tx/${hash}`
+      } else {
+        return `https://ropsten.etherscan.io/tx/${hash}`
+      }
+    }
+  },
+})
+
+Vue.prototype.$EventBus = new Vue();
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  linkActiveClass: "active",
+  linkExactActiveClass: "exact-active",
   components: {App},
   template: '<App/>',
 })
