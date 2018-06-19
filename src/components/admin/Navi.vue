@@ -7,6 +7,7 @@
         <b-navbar-nav>
           <router-link active-class="active" class="nav-link" to="/admin/pxl">PXL</router-link>
           <router-link active-class="active" class="nav-link" to="/admin/whitelist">WhiteList</router-link>
+          <router-link active-class="active" class="nav-link" to="/admin/setting">Setting</router-link>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
