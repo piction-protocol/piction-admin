@@ -16,7 +16,7 @@
     data() {
       return {
         totalSupply: null,
-        contractAddress: process.env.CONTRACT_ADDRESS.PXL
+        contractAddress: null,
       }
     },
     methods: {
@@ -28,6 +28,7 @@
     },
     created() {
       this.getTotalSupply();
+      this.contractAddress = localStorage.getItem(this.localStorageKey.PXLAddress);
       this.$EventBus.$on('setTotalSupply', () => this.getTotalSupply());
     },
   }
