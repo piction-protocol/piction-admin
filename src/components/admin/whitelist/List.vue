@@ -1,10 +1,18 @@
 <template>
   <div>
-    <p>검색<input v-model='searchAddress'></p>
+    <b-input-group size="lg" class="search">
+      <b-form-input v-model="searchAddress" placeholder="Search Address"></b-form-input>
+    </b-input-group>
     <ul>
       <li v-for='(whitelist, index) in filterWhitelists(whitelists)'>
-        {{ whitelist }}
-        <button v-on:click='deleteWhitelist(index)'>삭제</button>
+        <b-input-group class="whitelist mb-3" size="sm">
+          <b-form-input v-bind:value="whitelist" disabled/>
+          <b-input-group-append>
+            <b-btn size="sm" text="Button" variant="danger"
+                   v-on:click='deleteWhitelist(index)'>삭제
+            </b-btn>
+          </b-input-group-append>
+        </b-input-group>
       </li>
     </ul>
   </div>
@@ -73,5 +81,16 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  ul {
+    list-style: none;
+    padding: 0;
+  }
 
+  .search {
+    margin-bottom: 10px;
+  }
+
+  .whitelist {
+    margin-bottom: 5px !important;
+  }
 </style>
