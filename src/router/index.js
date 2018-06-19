@@ -11,8 +11,8 @@ const invailidPath = (to, name, addressKey) => {
   return to.name == name && !localStorage.getItem(addressKey)
 }
 
-const require = (to, from, next) => {
-  const app = this.a.app;
+const require = async (to, from, next) => {
+  const app = await router.app;
   if (invailidPath(to, 'PXL', app.localStorageKey.PXLAddress) ||
     invailidPath(to, 'Whitelist', app.localStorageKey.whitelistAddress) ||
     invailidPath(to, 'Sale', app.localStorageKey.saleAddress)) {
@@ -23,7 +23,7 @@ const require = (to, from, next) => {
   }
 }
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -53,4 +53,5 @@ export default new Router({
       component: Setting
     }
   ]
-})
+});
+export default router;
