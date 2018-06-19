@@ -49,7 +49,7 @@
       reset() {
         if(confirm(this.title + '를 초기화합니다.')) {
           this.address = null;
-          localStorage.setItem(this.storageKey, null);
+          localStorage.removeItem(this.storageKey);
           alert('초기화되었습니다')
         }
       }
