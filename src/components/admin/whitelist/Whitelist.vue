@@ -22,7 +22,7 @@
     },
     created() {
       web3 = new Web3(web3.currentProvider);
-      this.contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS.WHITELIST);
+      this.contract = new web3.eth.Contract(abi, localStorage.getItem(this.localStorageKey.whitelistAddress));
       web3.eth.getAccounts((err, account) => this.contract.options.from = account[0]);
     }
   }
