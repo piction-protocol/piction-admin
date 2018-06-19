@@ -1,12 +1,12 @@
 <template>
-  <div class="navi">
+  <div class="navi" v-if="isAdmin">
     <b-navbar toggleable="md" type="dark" variant="info">
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
       <b-navbar-brand href="#">Admin</b-navbar-brand>
       <b-collapse is-nav id="nav_collapse">
         <b-navbar-nav>
-            <router-link active-class="active" class="nav-link" to="/admin">PXL</router-link>
-            <router-link active-class="active" class="nav-link" to="/admin/whitelist">WhiteList</router-link>
+          <router-link active-class="active" class="nav-link" to="/admin/pxl">PXL</router-link>
+          <router-link active-class="active" class="nav-link" to="/admin/whitelist">WhiteList</router-link>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -16,13 +16,16 @@
 <script>
   export default {
     name: 'Navi',
-    computed: {},
     data() {
-      return {}
+      return {
+        isAdmin: this.$router.currentRoute.name != 'Wallet',
+      }
     },
-    methods: {},
-    created() {
-    },
+    watch: {
+      '$route'(to, from) {
+        this.isAdmin = this.$router.currentRoute.name != 'Wallet';
+      }
+    }
   }
 </script>
 

@@ -1,12 +1,14 @@
 <template>
   <div>
-    <textarea v-model='inputAddress'></textarea><button v-on:click='addWhitelists'>추가</button>
+    <textarea v-model='inputAddress'></textarea>
+    <button v-on:click='addWhitelists'>추가</button>
   </div>
 </template>
 
 <script>
   export default {
     name: 'WhitelistAdd',
+    props: ['contract'],
     data() {
       return {
         whitelists: [],
@@ -21,20 +23,20 @@
           alert('최대 30개의 주소까지 추가할 수 있습니다');
           return;
         }
-        this.$parent.contract.methods.addAddressesToWhitelist(whitelist).send()
-        .on('transactionHash', (hash) => {
-          console.log('transactionHash: ' + hash);
-        })
-        .on('receipt', (receipt) => {
-          console.log(receipt);
-          this.$EventBus.$emit('refreshWhitelist');
-          this.inputAddress = '';
-        })
-        .on('confirmation', (confirmationNumber, receipt) => {
-        })
-        .on('error', (error) => {
-          console.log(error);
-        })
+        this.contract.methods.addAddressesToWhitelist(whitelist).send()
+          .on('transactionHash', (hash) => {
+            console.log('transactionHash: ' + hash);
+          })
+          .on('receipt', (receipt) => {
+            console.log(receipt);
+            this.$EventBus.$emit('refreshWhitelist');
+            this.inputAddress = '';
+          })
+          .on('confirmation', (confirmationNumber, receipt) => {
+          })
+          .on('error', (error) => {
+            console.log(error);
+          })
       }
     }
   }

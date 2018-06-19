@@ -1,19 +1,17 @@
 <template>
   <div>
-    <Navi/>
-    <ContractInfo class="component"/>
-    <Mint class="component"/>
-    <Burn class="component"/>
-    <BalanceOf class="component"/>
-    <Transfer class="component"/>
-    <AddOwner class="component"/>
+    <ContractInfo class="component" :contract="contract"/>
+    <Mint class="component" :contract="contract"/>
+    <Burn class="component" :contract="contract"/>
+    <BalanceOf class="component" :contract="contract"/>
+    <Transfer class="component" :contract="contract"/>
+    <AddOwner class="component" :contract="contract"/>
   </div>
 </template>
 
 <script>
   import Web3 from 'web3'
   import abi from './../../../assets/abi/PXL.json';
-  import Navi from './../Navi'
   import ContractInfo from './ContractInfo'
   import Mint from './Mint'
   import Burn from './Burn'
@@ -23,7 +21,7 @@
 
   export default {
     name: 'PXL',
-    components: {Navi, ContractInfo, Mint, Burn, BalanceOf, Transfer, AddOwner},
+    components: {ContractInfo, Mint, Burn, BalanceOf, Transfer, AddOwner},
     data() {
       return {
         contract: null,

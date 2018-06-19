@@ -37,6 +37,7 @@
         return this.address && this.address.length > 0 ? true : false
       }
     },
+    props: ['contract'],
     data() {
       return {
         address: null,
@@ -47,7 +48,7 @@
     methods: {
       addOwner() {
         this.progress = true;
-        this.$parent.contract.methods.addOwner(this.address).send()
+        this.contract.methods.addOwner(this.address).send()
           .on('transactionHash', (hash) => {
             this.transactionHash = hash;
           })

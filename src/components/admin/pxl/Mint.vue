@@ -38,6 +38,7 @@
         return parseInt(this.amount) > 0 ? true : false
       },
     },
+    props: ['contract'],
     data() {
       return {
         amount: null,
@@ -49,7 +50,7 @@
       mint() {
         this.progress = true;
         let amount = new BigNumber(this.amount).multipliedBy(new BigNumber(Math.pow(10, 18)));
-        this.$parent.contract.methods.mint(amount).send()
+        this.contract.methods.mint(amount).send()
           .on('transactionHash', (hash) => {
             this.transactionHash = hash;
           })

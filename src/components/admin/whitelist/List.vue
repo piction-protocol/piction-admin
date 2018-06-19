@@ -13,6 +13,7 @@
 <script>
   export default {
     name: 'WhitelistList',
+    props: ['contract'],
     data() {
       return {
         whitelists: [],
@@ -21,14 +22,14 @@
     },
     methods: {
       getEventWhitelist() {
-        this.$parent.contract.getPastEvents('WhitelistedAddressAdded', {
+        this.contract.getPastEvents('WhitelistedAddressAdded', {
           fromBlock: 0,
           toBlock: 'latest'
         }, (error, events) => {
           var addedAddresses = [];
           events.forEach(obj => {
             var address = obj.returnValues[0];
-            this.$parent.contract.methods.whitelist(address).call((err, result) => {
+            this.contract.methods.whitelist(address).call((err, result) => {
               if (result) {
                 addedAddresses.push(address);
                 this.whitelists = Array.from(new Set(addedAddresses));
@@ -40,19 +41,19 @@
       deleteWhitelist(index) {
         var address = this.whitelists[index];
 
-        this.$parent.contract.methods.removeAddressFromWhitelist(address).send()
-        .on('transactionHash', (hash) => {
-          console.log('transactionHash: ' + hash);
-        })
-        .on('receipt', (receipt) => {
-          console.log(receipt);
-          this.getEventWhitelist();
-        })
-        .on('confirmation', (confirmationNumber, receipt) => {
-        })
-        .on('error', (error) => {
-          console.log(error);
-        });
+        this.contract.methods.removeAddressFromWhitelist(address).send()
+          .on('transactionHash', (hash) => {
+            console.log('transactionHash: ' + hash);
+          })
+          .on('receipt', (receipt) => {
+            console.log(receipt);
+            this.getEventWhitelist();
+          })
+          .on('confirmation', (confirmationNumber, receipt) => {
+          })
+          .on('error', (error) => {
+            console.log(error);
+          });
       },
       filterWhitelists(addresses) {
         if (this.searchAddress.length !== 0) {

@@ -1,8 +1,7 @@
 <template>
   <div>
-    <Navi/>
-    <List class="component"/>
-    <AddWhitelist class="component"/>
+    <List class="component" :contract="contract"/>
+    <AddWhitelist class="component" :contract="contract"/>
   </div>
 </template>
 
@@ -15,7 +14,7 @@
 
   export default {
     name: 'Whitelist',
-    components: {Navi, List, AddWhitelist},
+    components: {List, AddWhitelist},
     data() {
       return {
         contract: null

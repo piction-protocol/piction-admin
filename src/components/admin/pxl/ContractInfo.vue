@@ -12,6 +12,7 @@
 
   export default {
     name: 'PXLContractInfo',
+    props: ['contract'],
     data() {
       return {
         totalSupply: null,
@@ -20,7 +21,7 @@
     },
     methods: {
       getTotalSupply() {
-        this.$parent.contract.methods.totalSupply().call((err, receipt) => {
+        this.contract.methods.totalSupply().call((err, receipt) => {
           this.totalSupply = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
         });
       }
