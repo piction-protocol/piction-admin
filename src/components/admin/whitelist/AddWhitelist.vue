@@ -1,7 +1,17 @@
 <template>
   <div>
-    <textarea v-model='inputAddress'></textarea>
-    <button v-on:click='addWhitelists'>추가</button>
+    <b-form-textarea
+      class="inputAddress"
+      id="inputAddress"
+      v-model="inputAddress"
+      :state="addressState"
+      placeholder="Add whitelist address"
+      :rows="3"
+      :max-rows="30"/>
+    <b-btn variant="info"
+           :disabled="!addressState"
+           v-on:click="addWhitelists()">추가
+    </b-btn>
   </div>
 </template>
 
@@ -14,6 +24,11 @@
         whitelists: [],
         inputAddress: '',
       }
+    },
+    computed: {
+      addressState() {
+        return this.inputAddress && this.inputAddress.length > 0 ? true : false
+      },
     },
     methods: {
       addWhitelists(event) {
@@ -44,5 +59,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .inputAddress {
+    margin-bottom: 7px;
+  }
 </style>
