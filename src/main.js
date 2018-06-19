@@ -11,6 +11,15 @@ Vue.config.productionTip = false
 Vue.use(BootstrapVue);
 
 Vue.mixin({
+  data() {
+    return {
+      localStorageKey: {
+        PXLAddress: 'PXLAddress',
+        whitelistAddress: 'whitelistAddress',
+        saleAddress: 'saleAddress',
+      }
+    }
+  },
   methods: {
     getEtherscanURL(hash) {
       if (process.env.NODE_ENV == 'production') {
