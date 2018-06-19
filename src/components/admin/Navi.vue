@@ -6,7 +6,7 @@
       <b-collapse is-nav id="nav_collapse">
         <b-navbar-nav>
             <router-link active-class="active" class="nav-link" to="/admin">PXL</router-link>
-            <router-link active-class="active" class="nav-link" to="/white-list">WhiteList</router-link>
+            <router-link active-class="active" class="nav-link" to="/admin/whitelist">WhiteList</router-link>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
