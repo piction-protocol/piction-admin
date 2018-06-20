@@ -1,27 +1,29 @@
 <template>
-  <div>
-    <b-card title="setState"
+  <div v-if="selected > 0">
+    <b-card title="SetState"
             img-top
             tag="article">
       <p class="card-text">
-        현재 상태를 변경합니다.
+        판매 상태를 변경합니다. (현재 상태: {{ selected && options[selected].text }})
       </p>
-      <div>현재 상태: {{ state }}</div>
-      <div>
-        <input type="radio" id="Starting" value="Starting" v-model="picked" :disabled="state == 'Starting'">
-        <label for="two">Starting</label>
-        <br>
-        <input type="radio" id="Pausing" value="Pausing" v-model="picked" :disabled="state == 'Pausing'">
-        <label for="three">Pausing</label>
-        <br>
-        <input type="radio" id="Finished" value="Finished" v-model="picked" :disabled="state == 'Finished'">
-        <label for="four">Finished</label>
-        <br>
-        <b-btn variant="info"
-               :disabled="!pickedState || progress"
-               v-on:click="changeState">변경
-        </b-btn>
-        <b-progress v-if="progress" :value="100" variant="danger" :animated="true"></b-progress>
+      <b-input-group>
+        <b-form-select v-model="selected">
+          <option v-for="option in options"
+                  :value="option.value"
+                  :disabled="option.disabled">{{option.text}}
+          </option>
+        </b-form-select>
+
+        <b-input-group-append>
+          <b-btn variant="info"
+                 :disabled="selected && options[selected].disabled"
+                 @click="changeState">변경
+          </b-btn>
+        </b-input-group-append>
+      </b-input-group>
+      <div v-if="transactionHash">
+        TransactionHash : <a target="_blank"
+                             v-bind:href="getEtherscanURL(transactionHash)">{{transactionHash}}</a>
       </div>
     </b-card>
   </div>
@@ -38,72 +40,41 @@
     props: ['contract'],
     data() {
       return {
-        state: null,
-        picked: null,
-        progress: false
+        transactionHash: null,
+        selected: null,
+        options: [
+          {value: 0, text: 'Unknown', methodName: null},
+          {value: 1, text: 'Preparing', methodName: null},
+          {value: 2, text: 'Starting', methodName: 'start'},
+          {value: 3, text: 'Pausing', methodName: 'pause'},
+          {value: 4, text: 'Finished', methodName: 'finish'},
+        ]
       }
     },
     methods: {
       getState() {
-        this.contract.methods.getState().call((err, receipt) => {
-          this.contract.methods.getKeyByValue(receipt).call((err, state) => {
-              this.state = state
-              this.picked = state
-          });
+        this.contract.methods.getState().call((err, stateIndex) => {
+          this.options.forEach(option => option.disabled = false);
+          this.options[0].disabled = true
+          this.options[1].disabled = true
+          this.options[stateIndex].disabled = true
+          this.selected = stateIndex;
         });
       },
       changeState() {
-        this.progress = true;
-        switch (this.picked) {
-        case "Starting":
-          console.log("Starting")
-          this.contract.methods.start().send()
+        this.$EventBus.$emit('showProgressModal');
+        eval(`this.contract.methods.${this.options[this.selected].methodName}()`).send()
           .on('transactionHash', (hash) => {
-            console.log('transactionHash: ' + hash);
+            this.transactionHash = hash;
           })
           .on('receipt', (receipt) => {
-            this.progress = false;
             this.getState();
+            this.$EventBus.$emit('hideProgressModal');
           })
-          .on('error', (error) => {
-            this.progress = false;
+          .on('error', (err) => {
+            this.$EventBus.$emit('hideProgressModal');
             alert(err);
           });
-          break;
-        case "Pausing":
-        console.log("Pausing")
-          this.contract.methods.pause().send()
-          .on('transactionHash', (hash) => {
-            console.log('transactionHash: ' + hash);
-          })
-          .on('receipt', (receipt) => {
-            this.progress = false;
-            this.getState();
-          })
-          .on('error', (error) => {
-            this.progress = false;
-            alert(err);
-          });
-          break;
-        case "Finished":
-          this.contract.methods.finish().send()
-          .on('transactionHash', (hash) => {
-            console.log('transactionHash: ' + hash);
-          })
-          .on('receipt', (receipt) => {
-            this.progress = false;
-            this.getState();
-          })
-          .on('error', (error) => {
-            this.progress = false;
-            alert(err);
-          });
-          break;
-        default:
-          this.progress = false;
-          alert('choice state')
-          break;
-        }
       }
     },
     created() {
