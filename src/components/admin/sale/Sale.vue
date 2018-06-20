@@ -25,7 +25,16 @@
 
   export default {
     name: 'Sale',
-    components: {SaleInfo, SaleState, SaleRegisterProduct, SaleSetWallet, SaleSetWhitelist, SaleSetTokenDistributor, SaleRefund, SaleBuyerAddressTranster},
+    components: {
+      SaleInfo,
+      SaleState,
+      SaleRegisterProduct,
+      SaleSetWallet,
+      SaleSetWhitelist,
+      SaleSetTokenDistributor,
+      SaleRefund,
+      SaleBuyerAddressTranster
+    },
     data() {
       return {
         contract: null
@@ -41,5 +50,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .component {
+    margin-bottom: 10px;
+  }
 </style>
