@@ -43,21 +43,20 @@
         transactionHash: null,
         selected: null,
         options: [
-          {value: 0, text: 'Unknown', methodName: null},
-          {value: 1, text: 'Preparing', methodName: null},
-          {value: 2, text: 'Starting', methodName: 'start'},
-          {value: 3, text: 'Pausing', methodName: 'pause'},
-          {value: 4, text: 'Finished', methodName: 'finish'},
+          {value: 0, text: 'Unknown', methodName: null, disable_options: [true, true, true, true, true]},
+          {value: 1, text: 'Preparing', methodName: null, disable_options: [true, true, false, true, true]},
+          {value: 2, text: 'Starting', methodName: 'start', disable_options: [true, true, true, false, false]},
+          {value: 3, text: 'Pausing', methodName: 'pause', disable_options: [true, true, false, true, false]},
+          {value: 4, text: 'Finished', methodName: 'finish', disable_options: [true, true, true, true, true]},
         ]
       }
     },
     methods: {
       getState() {
         this.contract.methods.getState().call((err, stateIndex) => {
-          this.options.forEach(option => option.disabled = false);
-          this.options[0].disabled = true
-          this.options[1].disabled = true
-          this.options[stateIndex].disabled = true
+          this.options.forEach((option, index) => {
+            option.disabled = this.options[stateIndex].disable_options[index];
+          });
           this.selected = stateIndex;
         });
       },
