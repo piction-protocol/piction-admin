@@ -4,7 +4,7 @@
             img-top
             tag="article">
       <p class="card-text">
-        Product의 주소를 변경합니다. (Preparing이거나 Finished일때 가능)
+        Product의 주소를 변경합니다. (State가 Unknown, Preparing 또는 Finished일때 가능)
       </p>
       <p>현재주소: {{ currentAddress }}</p>
       <b-input-group>
