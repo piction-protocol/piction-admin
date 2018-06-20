@@ -2,17 +2,23 @@
   <div>
     <b-alert show align="left">
       <div>SALE CONTRACT ADDRESS : {{ contractAddress }}</div>
-      <br>
-      <div><H5>[PRODUCT INFO]</H5></div>
-      <div> 상품명 : {{ productName }}</div>
-      <div> 상품주소 : {{ productAddress }}</div>
-      <div> 최대 모집 금액 : {{ productMaxcap }} ETH</div>
-      <div> 현재 모집 금액 : {{ productWeiRaised }} ETH</div>
-      <div> 1인당 한정 금액 : {{ productExceed }} ETH</div>
-      <div> 구매 최소 금액 : {{ productMinimum }} ETH</div>
-      <div> 토큰 전환 비율 : {{ productRate }} PXL : 1 ETH</div>
-      <div> Lockup 기간 : {{ productLockup }} 일</div>
     </b-alert>
+    <b-alert v-if="productAddress == 0" show variant="danger" align="left">
+      <div>등록된 상품이 없습니다.</div>
+    </b-alert>
+    <b-list-group v-if="productAddress > 0">
+      <b-list-group-item align="left">등록 상품 정보</b-list-group-item>
+      <b-list-group-item align="left">
+        <div>상품명 : {{ productName }}</div>
+        <div>상품 주소 : {{ productAddress }}</div>
+        <div>최대 모집 금액 : {{ productMaxcap }} ETH</div>
+        <div>현재 모집 금액 : {{ productWeiRaised }} ETH</div>
+        <div>1인당 한정 금액 : {{ productExceed }} ETH</div>
+        <div>구매 최소 금액 : {{ productMinimum }} ETH</div>
+        <div>토큰 전환 비율 : {{ productRate }} PXL : 1 ETH</div>
+        <div>락업 기간 : {{ productLockup }} 일</div>
+      </b-list-group-item>
+    </b-list-group>
   </div>
 </template>
 
@@ -51,7 +57,7 @@
       },
       getProductName() {
         this.productContract.methods.name().call((err, receipt) => {
-           this.productName = receipt;
+          this.productName = receipt;
         });
       },
       getMaxcap() {
