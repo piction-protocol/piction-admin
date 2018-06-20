@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Wallet from '@/components/Wallet'
 import PXL from '@/components/admin/pxl/PXL'
 import Whitelist from '@/components/admin/whitelist/Whitelist'
+import Sale from '@/components/admin/sale/Sale'
 import Setting from '@/components/admin/setting/Setting'
 
 Vue.use(Router)
@@ -45,6 +46,12 @@ const router = new Router({
       path: '/admin/whitelist',
       name: 'Whitelist',
       component: Whitelist,
+      beforeEnter: require
+    },
+    {
+      path: '/admin/sale',
+      name: 'Sale',
+      component: Sale,
       beforeEnter: require
     },
     {

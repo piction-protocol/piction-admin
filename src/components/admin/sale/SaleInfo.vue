@@ -1,0 +1,113 @@
+<template>
+  <div>
+    <b-alert show align="left">
+      <div>SALE CONTRACT ADDRESS : {{ contractAddress }}</div>
+      <br>
+      <div><H5>[PRODUCT INFO]</H5></div>
+      <div> 상품명 : {{ productName }}</div>
+      <div> 상품주소 : {{ productAddress }}</div>
+      <div> 최대 모집 금액 : {{ productMaxcap }} ETH</div>
+      <div> 현재 모집 금액 : {{ productWeiRaised }} ETH</div>
+      <div> 1인당 한정 금액 : {{ productExceed }} ETH</div>
+      <div> 구매 최소 금액 : {{ productMinimum }} ETH</div>
+      <div> 토큰 전환 비율 : {{ productRate }} PXL : 1 ETH</div>
+      <div> Lockup 기간 : {{ productLockup }} 일</div>
+    </b-alert>
+  </div>
+</template>
+
+<script>
+  import BigNumber from 'bignumber.js';
+  import productAbi from './../../../assets/abi/Product.json'
+
+  export default {
+    name: 'SaleInfo',
+    props: ['contract'],
+    data() {
+      return {
+        contractAddress: null,
+        productAddress: null,
+        productContract: null,
+        productName: '',
+        productMaxcap: 0,
+        productWeiRaised: 0,
+        productExceed: 0,
+        productMinimum: 0,
+        productRate: 0,
+        productLockup: ''
+      }
+    },
+    methods: {
+      getSaleAddress() {
+        this.contractAddress = localStorage.getItem(this.localStorageKey.saleAddress);
+      },
+      getProductAddress() {
+        this.contract.methods.product().call((err, productAddress) => {
+          this.productAddress = productAddress;
+        });
+      },
+      getProductContract() {
+        this.productContract = new web3.eth.Contract(productAbi, this.productAddress);
+      },
+      getProductName() {
+        this.productContract.methods.name().call((err, receipt) => {
+           this.productName = receipt;
+        });
+      },
+      getMaxcap() {
+        this.productContract.methods.maxcap().call((err, receipt) => {
+          this.productMaxcap = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
+        })
+      },
+      getWeiRaised() {
+        this.productContract.methods.weiRaised().call((err, receipt) => {
+          this.productWeiRaised = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
+        })
+      },
+      getExceed() {
+        this.productContract.methods.exceed().call((err, receipt) => {
+          this.productExceed = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
+        })
+      },
+      getMinimum() {
+        this.productContract.methods.minimum().call((err, receipt) => {
+          this.productMinimum = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
+        })
+      },
+      getRate() {
+        this.productContract.methods.rate().call((err, receipt) => {
+          this.productRate = receipt;
+        })
+      },
+      getLockup() {
+        this.productContract.methods.lockup().call((err, receipt) => {
+          this.productLockup = receipt;
+        })
+      }
+    },
+    watch: {
+      productAddress() {
+        this.getProductContract();
+      },
+      productContract() {
+        this.getProductName();
+        this.getMaxcap();
+        this.getWeiRaised();
+        this.getExceed();
+        this.getMinimum();
+        this.getRate();
+        this.getLockup();
+      }
+    },
+    created() {
+      this.getSaleAddress();
+      this.getProductAddress();
+      this.$EventBus.$on('changedProduct', () => this.getProductAddress());
+    }
+  }
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+
+</style>
