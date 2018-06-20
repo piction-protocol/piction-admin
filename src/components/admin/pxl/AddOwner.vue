@@ -14,12 +14,11 @@
                       placeholder="Address"></b-form-input>
         <b-input-group-append>
           <b-btn variant="info"
-                 :disabled="!addressState || progress"
+                 :disabled="!addressState"
                  v-on:click="addOwner()">실행
           </b-btn>
         </b-input-group-append>
       </b-input-group>
-      <b-progress v-if="progress" :value="100" variant="danger" :animated="true"></b-progress>
       <div v-if="transactionHash">
         TransactionHash : <a target="_blank" v-bind:href="getEtherscanURL(transactionHash)">{{transactionHash}}</a>
       </div>

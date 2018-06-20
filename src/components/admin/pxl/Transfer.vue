@@ -19,12 +19,11 @@
                       placeholder="Amount"></b-form-input>
         <b-input-group-append>
           <b-btn variant="info"
-                 :disabled="!addressState || !amountState || progress"
+                 :disabled="!addressState || !amountState"
                  v-on:click="transfer()">실행
           </b-btn>
         </b-input-group-append>
       </b-input-group>
-      <b-progress v-if="progress" :value="100" variant="danger" :animated="true"></b-progress>
       <div v-if="transactionHash">
         TransactionHash : <a target="_blank" v-bind:href="getEtherscanURL(transactionHash)">{{transactionHash}}</a>
       </div>
@@ -50,23 +49,22 @@
       return {
         address: null,
         amount: null,
-        progress: false,
         transactionHash: null,
       }
     },
     methods: {
       transfer() {
-        this.progress = true;
+        this.$EventBus.$emit('showProgressModal');
         let amount = new BigNumber(this.amount).multipliedBy(new BigNumber(Math.pow(10, 18)));
         this.contract.methods.transfer(this.address, amount).send()
           .on('transactionHash', (hash) => {
             this.transactionHash = hash;
           })
           .on('receipt', (receipt) => {
-            this.progress = false;
+            this.$EventBus.$emit('hideProgressModal');
           })
           .on('error', (err) => {
-            this.progress = false;
+            this.$EventBus.$emit('hideProgressModal');
             alert(err);
           });
       }

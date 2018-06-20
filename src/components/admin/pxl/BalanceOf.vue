@@ -39,7 +39,6 @@
       return {
         address: null,
         amount: null,
-        progress: false,
         transactionHash: null,
       }
     },
