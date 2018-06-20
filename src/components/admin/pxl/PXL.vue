@@ -6,6 +6,7 @@
     <BalanceOf class="component" :contract="contract"/>
     <Transfer class="component" :contract="contract"/>
     <AddOwner class="component" :contract="contract"/>
+    <Unlock class="component" :contract="contract"/>
   </div>
 </template>
 
@@ -18,10 +19,11 @@
   import BalanceOf from './BalanceOf'
   import Transfer from './Transfer'
   import AddOwner from './AddOwner'
+  import Unlock from './Unlock'
 
   export default {
     name: 'PXL',
-    components: {ContractInfo, Mint, Burn, BalanceOf, Transfer, AddOwner},
+    components: {ContractInfo, Mint, Burn, BalanceOf, Transfer, AddOwner, Unlock},
     data() {
       return {
         contract: null,
