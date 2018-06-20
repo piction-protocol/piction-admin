@@ -47,20 +47,19 @@
         })
       },
       deleteWhitelist(index) {
-        var address = this.whitelists[index];
-
+        this.$EventBus.$emit('showProgressModal');
+        let address = this.whitelists[index];
         this.contract.methods.removeAddressFromWhitelist(address).send()
           .on('transactionHash', (hash) => {
             console.log('transactionHash: ' + hash);
           })
           .on('receipt', (receipt) => {
-            console.log(receipt);
             this.getEventWhitelist();
+            this.$EventBus.$emit('hideProgressModal');
           })
-          .on('confirmation', (confirmationNumber, receipt) => {
-          })
-          .on('error', (error) => {
-            console.log(error);
+          .on('error', (err) => {
+            this.$EventBus.$emit('hideProgressModal');
+            alert(err);
           });
       },
       filterWhitelists(addresses) {
