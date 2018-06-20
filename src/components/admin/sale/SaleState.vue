@@ -8,9 +8,6 @@
       </p>
       <div>현재 상태: {{ state }}</div>
       <div>
-        <input type="radio" id="Preparing" value="Preparing" v-model="picked" disabled>
-        <label for="one">Preparing</label>
-        <br>
         <input type="radio" id="Starting" value="Starting" v-model="picked" :disabled="state == 'Starting'">
         <label for="two">Starting</label>
         <br>
