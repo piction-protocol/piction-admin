@@ -136,10 +136,6 @@
         "type": "address"
       },
       {
-        "name": "_product",
-        "type": "address"
-      },
-      {
         "name": "_tokenDistributor",
         "type": "address"
       }
@@ -213,7 +209,7 @@
       {
         "indexed": false,
         "name": "_id",
-        "type": "bytes32"
+        "type": "uint256"
       }
     ],
     "name": "BuyerAddressTransfer",
@@ -344,14 +340,33 @@
     "type": "function"
   },
   {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_product",
+        "type": "address"
+      }
+    ],
+    "name": "getProductWeiRaised",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "constant": false,
     "inputs": [
       {
-        "name": "_productName",
-        "type": "string"
+        "name": "_product",
+        "type": "address"
       },
       {
-        "name": "_buyerAddress",
+        "name": "_buyer",
         "type": "address"
       }
     ],
@@ -365,8 +380,8 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_productName",
-        "type": "string"
+        "name": "_product",
+        "type": "address"
       },
       {
         "name": "_from",
