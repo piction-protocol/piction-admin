@@ -7,11 +7,11 @@
         구매자의 토큰 받을 주소를 변경합니다. (변경될 주소를 미리 Whitelist에 등록해야 합니다.)
       </p>
       <b-input-group>
-        <b-form-input id="product"
-                      v-model.trim="product"
+        <b-form-input id="productAddress"
+                      v-model.trim="productAddress"
                       type="text"
-                      :state="productState"
-                      placeholder="Product Name"></b-form-input>
+                      :state="productAddressState"
+                      placeholder="Product Address"></b-form-input>
         <b-form-input id="fromAddress"
                       v-model.trim="fromAddress"
                       type="text"
@@ -24,12 +24,11 @@
                       placeholder="Address"></b-form-input>
         <b-input-group-append>
           <b-btn variant="info"
-                 :disabled="!productState || !fromAddressState || !toAddressState || progress"
+                 :disabled="!productAddressState || !fromAddressState || !toAddressState"
                  v-on:click="transfer()">실행
           </b-btn>
         </b-input-group-append>
       </b-input-group>
-      <b-progress v-if="progress" :value="100" variant="danger" :animated="true"></b-progress>
       <div v-if="transactionHash">
         TransactionHash : <a target="_blank" v-bind:href="getEtherscanURL(transactionHash)">{{transactionHash}}</a>
       </div>
@@ -43,8 +42,8 @@
   export default {
     name: 'SaleBuyerAddressTransfer',
     computed: {
-      productState() {
-        return this.product && this.product.length > 0 ? true : false
+      productAddressState() {
+        return this.productAddress && this.productAddress.length > 0 ? true : false
       },
       fromAddressState() {
         return this.fromAddress && this.fromAddress.length > 0 ? true : false
@@ -56,28 +55,27 @@
     props: ['contract'],
     data() {
       return {
-        product: null,
+        productAddress: null,
         fromAddress: null,
         toAddress: null,
-        progress: false,
         transactionHash: null,
       }
     },
     methods: {
       transfer() {
-        this.progress = true;
-        console.log('product: ' + this.product)
+        this.$EventBus.$emit('showProgressModal');
+        console.log('productAddress: ' + this.productAddress)
         console.log('from: ' + this.fromAddress)
         console.log('to: ' + this.toAddress)
-        this.contract.methods.buyerAddressTransfer(this.product, this.fromAddress, this.toAddress).send()
+        this.contract.methods.buyerAddressTransfer(this.productAddress, this.fromAddress, this.toAddress).send()
           .on('transactionHash', (hash) => {
             this.transactionHash = hash;
           })
           .on('receipt', (receipt) => {
-            this.progress = false;
+            this.$EventBus.$emit('hideProgressModal');
           })
           .on('error', (err) => {
-            this.progress = false;
+            this.$EventBus.$emit('hideProgressModal');
             alert(err);
           });
       }

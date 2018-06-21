@@ -7,11 +7,11 @@
         구매자 목록에서 환불이 끝난 주소를 제거하고 판매된 금액에서 차감합니다.(환불은 수동으로 해야함)
       </p>
       <b-input-group>
-        <b-form-input id="product"
-                      v-model.trim="product"
+        <b-form-input id="productAddress"
+                      v-model.trim="productAddress"
                       type="text"
-                      :state="productState"
-                      placeholder="Product Name"></b-form-input>
+                      :state="productAddressState"
+                      placeholder="Product Address"></b-form-input>
         <b-form-input id="address"
                       v-model.trim="address"
                       type="text"
@@ -19,7 +19,7 @@
                       placeholder="Address"></b-form-input>
         <b-input-group-append>
           <b-btn variant="info"
-                 :disabled="!productState || !addressState || progress"
+                 :disabled="!productAddressState || !addressState || progress"
                  v-on:click="transfer()">실행
           </b-btn>
         </b-input-group-append>
@@ -38,8 +38,8 @@
   export default {
     name: 'SaleRefund',
     computed: {
-      productState() {
-        return this.product && this.product.length > 0 ? true : false
+      productAddressState() {
+        return this.productAddress && this.productAddress.length > 0 ? true : false
       },
       addressState() {
         return this.address && this.address.length > 0 ? true : false
@@ -48,7 +48,7 @@
     props: ['contract'],
     data() {
       return {
-        product: null,
+        productAddress: null,
         address: null,
         progress: false,
         transactionHash: null,
@@ -57,15 +57,15 @@
     methods: {
       transfer() {
         this.progress = true;
-        this.contract.methods.refund(this.product, this.address).send()
+        this.contract.methods.refund(this.productAddress, this.address).send()
           .on('transactionHash', (hash) => {
             this.transactionHash = hash;
           })
           .on('receipt', (receipt) => {
-            this.progress = false;
+            this.$EventBus.$emit('hideProgressModal');
           })
           .on('error', (err) => {
-            this.progress = false;
+            this.$EventBus.$emit('hideProgressModal');
             alert(err);
           });
       }

@@ -66,7 +66,7 @@
         })
       },
       getWeiRaised() {
-        this.productContract.methods.weiRaised().call((err, receipt) => {
+        this.contract.methods.getProductWeiRaised(this.productAddress).call((err, receipt) => {
           this.productWeiRaised = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
         })
       },

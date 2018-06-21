@@ -15,12 +15,11 @@
                       placeholder="Address"></b-form-input>
         <b-input-group-append>
           <b-btn variant="info"
-                 :disabled="!addressState || progress"
+                 :disabled="!addressState"
                  v-on:click="registerProduct()">실행
           </b-btn>
         </b-input-group-append>
       </b-input-group>
-      <b-progress v-if="progress" :value="100" variant="danger" :animated="true"></b-progress>
       <div v-if="transactionHash">
         TransactionHash : <a target="_blank"
                              v-bind:href="getEtherscanURL(transactionHash)">{{transactionHash}}</a>
@@ -42,7 +41,6 @@
       return {
         currentAddress: null,
         address: null,
-        progress: false,
         transactionHash: null,
       }
     },
@@ -55,19 +53,19 @@
       registerProduct() {
         // state가 preparing이거나 finish일 때만 변경가능해야 함.
         // isRegistered에 등록안되서 true가 아니어야 함
-        this.progress = true;
+        this.$EventBus.$emit('showProgressModal');
         this.contract.methods.registerProduct(this.address).send()
           .on('transactionHash', (hash) => {
             this.transactionHash = hash;
           })
           .on('receipt', (receipt) => {
-            this.progress = false;
+            this.$EventBus.$emit('hideProgressModal');
             this.getProductAddress();
             this.$EventBus.$emit('changedState');
             this.$EventBus.$emit('changedProduct');
           })
           .on('error', (err) => {
-            this.progress = false;
+            this.$EventBus.$emit('hideProgressModal');
             alert(err);
           });
       }
