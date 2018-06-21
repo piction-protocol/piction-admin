@@ -7,8 +7,8 @@
 </template>
 
 <script>
-  import Navi from './components/admin/Navi'
-  import ProgressModal from './ProgressModal'
+  import Navi from './components/Navi'
+  import ProgressModal from './components/ProgressModal'
 
   export default {
     name: 'App',

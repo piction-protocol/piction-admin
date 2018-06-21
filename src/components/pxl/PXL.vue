@@ -12,7 +12,7 @@
 
 <script>
   import Web3 from 'web3'
-  import abi from './../../../assets/abi/PXL.json';
+  import abi from '../../assets/abi/PXL.json';
   import ContractInfo from './ContractInfo'
   import Mint from './Mint'
   import Burn from './Burn'

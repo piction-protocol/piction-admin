@@ -13,7 +13,7 @@
 
 <script>
   import Web3 from 'web3';
-  import abi from './../../../assets/abi/Sale.json';
+  import abi from '../../assets/abi/Sale.json';
   import SaleInfo from './SaleInfo';
   import SaleState from './SaleState';
   import SaleRegisterProduct from './RegisterProduct';

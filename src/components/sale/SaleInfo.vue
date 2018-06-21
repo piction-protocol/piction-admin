@@ -24,7 +24,7 @@
 
 <script>
   import BigNumber from 'bignumber.js';
-  import productAbi from './../../../assets/abi/Product.json'
+  import productAbi from '../../assets/abi/Product.json'
 
   export default {
     name: 'SaleInfo',
