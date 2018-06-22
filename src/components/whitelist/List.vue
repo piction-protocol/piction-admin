@@ -51,7 +51,7 @@
         let address = this.whitelists[index];
         this.contract.methods.removeAddressFromWhitelist(address).send()
           .on('transactionHash', (hash) => {
-            console.log('transactionHash: ' + hash);
+            this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
           .on('receipt', (receipt) => {
             this.getEventWhitelist();
