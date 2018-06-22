@@ -23,7 +23,4 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .navi {
-    margin-bottom: 20px;
-  }
 </style>
