@@ -23,6 +23,7 @@
                     :current-page="currentPage"
                     :per-page="perPage"
                     :filter="filter"
+                    :sort-by.sync="sortBy"
                     @filtered="onFiltered">
               <template slot="amount" slot-scope="row">
                 {{ row.value }} PXL
