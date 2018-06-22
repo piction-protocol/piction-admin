@@ -40,7 +40,6 @@
     data() {
       return {
         address: null,
-        progress: false,
         transactionHash: null
       }
     },
@@ -49,13 +48,14 @@
         this.progress = true;
         this.contract.methods.addOwner(this.address).send()
           .on('transactionHash', (hash) => {
-            this.transactionHash = hash;
+            this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
           .on('receipt', (receipt) => {
-            this.progress = false;
+            this.transactionHash = receipt.transactionHash;
+            this.$EventBus.$emit('hideProgressModal');
           })
           .on('error', (err) => {
-            this.progress = false;
+            this.$EventBus.$emit('hideProgressModal');
             alert(err);
           });
       }

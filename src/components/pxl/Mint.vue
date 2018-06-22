@@ -20,8 +20,7 @@
         </b-input-group-append>
       </b-input-group>
       <div v-if="transactionHash">
-        TransactionHash : <a target="_blank"
-                             v-bind:href="getEtherscanURL(transactionHash)">{{transactionHash}}</a>
+        <a target="_blank" v-bind:href="getEtherscanURL(transactionHash)">{{transactionHash}}</a>
       </div>
     </b-card>
   </div>
@@ -50,9 +49,10 @@
         let amount = new BigNumber(this.amount).multipliedBy(new BigNumber(Math.pow(10, 18)));
         this.contract.methods.mint(amount).send()
           .on('transactionHash', (hash) => {
-            this.transactionHash = hash;
+            this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
           .on('receipt', (receipt) => {
+            this.transactionHash = receipt.transactionHash;
             this.$EventBus.$emit('hideProgressModal');
             this.$EventBus.$emit('setTotalSupply');
           })
