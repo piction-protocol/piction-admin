@@ -48,6 +48,11 @@
           <b-col md="6" class="my-1">
             <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
           </b-col>
+          <b-col md="6" class="my-1">
+            <b-form-group horizontal label="Per page" class="mb-0">
+              <b-form-select :options="pageOptions" v-model="perPage" />
+            </b-form-group>
+          </b-col>
         </b-row>
       </b-container>
     </b-card>
