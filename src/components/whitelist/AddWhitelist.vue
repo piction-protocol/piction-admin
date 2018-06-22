@@ -41,7 +41,7 @@
         this.$EventBus.$emit('showProgressModal');
         this.contract.methods.addAddressesToWhitelist(whitelist).send()
           .on('transactionHash', (hash) => {
-            console.log('transactionHash: ' + hash);
+            this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
           .on('receipt', (receipt) => {
             console.log(receipt);

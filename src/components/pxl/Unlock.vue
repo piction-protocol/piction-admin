@@ -40,9 +40,10 @@
         this.$EventBus.$emit('showProgressModal');
         this.contract.methods.unlock().send()
           .on('transactionHash', (hash) => {
-            this.transactionHash = hash;
+            this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
           .on('receipt', (receipt) => {
+            this.transactionHash = receipt.transactionHash;
             this.$EventBus.$emit('hideProgressModal');
             this.getLockState();
           })
