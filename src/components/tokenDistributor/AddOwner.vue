@@ -47,9 +47,10 @@
         this.$EventBus.$emit('showProgressModal');
         this.contract.methods.addOwner(this.saleAddress).send()
         .on('transactionHash', (hash) => {
-          this.transactionHash = hash;
+          this.$EventBus.$emit('SetMessageProgressModal', hash);
         })
         .on('receipt', (receipt) => {
+          this.transactionHash = receipt.transactionHash;
           this.$EventBus.$emit('hideProgressModal');
         })
         .on('error', (err) => {
