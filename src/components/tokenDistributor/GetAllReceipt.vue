@@ -62,19 +62,21 @@
     data() {
       return {
         fields: [
-          { key: 'id', label: 'ID' },
-          { key: 'product', label: 'Product' },
-          { key: 'buyer', label: 'Buyer' },
-          { key: 'amount', label: 'Amount' },
-          { key: 'etherAmount', label: 'EtherAmount' },
-          { key: 'release', label: 'Release' },
-          { key: 'refund', label: 'Refund' },
+          { key: 'id', label: 'ID', sortable: true },
+          { key: 'product', label: 'Product', sortable: true },
+          { key: 'buyer', label: 'Buyer', sortable: true },
+          { key: 'amount', label: 'Amount', sortable: true },
+          { key: 'etherAmount', label: 'EtherAmount', sortable: true },
+          { key: 'release', label: 'Release', sortable: true },
+          { key: 'refund', label: 'Refund', sortable: true },
         ],
         items: [],
         currentPage: 1,
         perPage: 10,
+        pageOptions: [ 5, 10, 15, 20 ],
         totalRows: this.items && this.items.length > 0 ? this.items.length : 0,
         filter: null,
+        sortBy: 'id',
         transactionHash: null,
       }
     },
@@ -113,61 +115,39 @@
         });
       },
       release(item) {
-        var index = this.items.findIndex(p => p.id == item.id)
+        var index = this.items.findIndex(p => p.id == item.id);
+        var contractIndex = index + 1;
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.getId(this.items[index].buyer, this.items[index].product).call((err, id) => {
-          if (id != this.items[index].id) {
-            alert('error')
-            this.$EventBus.$emit('hideProgressModal');
-            return;
-          } else {
-            if (this.items[index].release) {
-              alert('Error: This receipt was already released!')
-              return;
-            }
-            this.$EventBus.$emit('showProgressModal');
-            this.contract.methods.release(index).send()
-            .on('transactionHash', (hash) => {
-              this.transactionHash = hash;
-            })
-            .on('receipt', (receipt) => {
-              this.$EventBus.$emit('hideProgressModal');
-              this.getAllReceipt();
-            })
-            .on('error', (err) => {
-              this.$EventBus.$emit('hideProgressModal');
-              alert(err);
-            });
-          }
+        this.contract.methods.release(contractIndex).send()
+        .on('transactionHash', (hash) => {
+          this.$EventBus.$emit('SetMessageProgressModal', hash);
+          this.transactionHash = hash;
+        })
+        .on('receipt', (receipt) => {
+          this.$EventBus.$emit('hideProgressModal');
+          this.getAllReceipt();
+        })
+        .on('error', (err) => {
+          this.$EventBus.$emit('hideProgressModal');
+          alert(err);
         });
       },
       refund(item) {
-        var index = this.items.findIndex(p => p.id == item.id)
+        var index = this.items.findIndex(p => p.id == item.id);
+        var contractIndex = index + 1;
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.getId(this.items[index].buyer, this.items[index].product).call((err, id) => {
-          if (id != this.items[index].id) {
-            alert('error')
-            this.$EventBus.$emit('hideProgressModal');
-            return;
-          } else {
-            if (this.items[index].refund) {
-              alert('Error: This receipt was already refunded!')
-              return;
-            }
-            this.$EventBus.$emit('showProgressModal');
-            this.contract.methods.refund(index).send()
-            .on('transactionHash', (hash) => {
-              this.transactionHash = hash;
-            })
-            .on('receipt', (receipt) => {
-              this.$EventBus.$emit('hideProgressModal');
-              this.getAllReceipt();
-            })
-            .on('error', (err) => {
-              this.$EventBus.$emit('hideProgressModal');
-              alert(err);
-            });
-          }
+        this.contract.methods.refund(contractIndex).send()
+        .on('transactionHash', (hash) => {
+          this.$EventBus.$emit('SetMessageProgressModal', hash);
+        })
+        .on('receipt', (receipt) => {
+          this.transactionHash = receipt.transactionHash;
+          this.$EventBus.$emit('hideProgressModal');
+          this.getAllReceipt();
+        })
+        .on('error', (err) => {
+          this.$EventBus.$emit('hideProgressModal');
+          alert(err);
         });
       },
       onFiltered (filteredItems) {
