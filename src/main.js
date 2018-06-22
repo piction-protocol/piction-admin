@@ -10,35 +10,47 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.config.productionTip = false
 Vue.use(BootstrapVue);
 
-Vue.mixin({
-  data() {
-    return {
-      localStorageKey: {
-        PXLAddress: 'PXLAddress',
-        whitelistAddress: 'whitelistAddress',
-        saleAddress: 'saleAddress',
+web3.version.getNetwork((err, netId) => {
+  const networks = [null, 'mainnet', 'morden', 'ropsten'];
+  Vue.mixin({
+    data() {
+      return {
+        network: networks[parseInt(netId)],
+        localStorageKey: {
+          PXLAddress: 'PXLAddress',
+          whitelistAddress: 'whitelistAddress',
+          saleAddress: 'saleAddress',
+        }
       }
-    }
-  },
-  methods: {
-    getEtherscanURL(hash) {
-      if (process.env.NODE_ENV == 'production') {
-        return `https://etherscan.io/tx/${hash}`
-      } else {
-        return `https://ropsten.etherscan.io/tx/${hash}`
+    },
+    methods: {
+      getEtherscanURL(hash) {
+        if (this.network == 'mainnet') {
+          return `https://etherscan.io/tx/${hash}`
+        } else {
+          return `https://${this.network}.etherscan.io/tx/${hash}`
+        }
+      },
+      getEtherscanURLForAddress(address) {
+        if (this.network == 'mainnet') {
+          return `https://etherscan.io/address/${address}`
+        } else {
+          return `https://${this.network}.etherscan.io/address/${address}`
+        }
       }
-    }
-  },
-})
+    },
+  })
 
-Vue.prototype.$EventBus = new Vue();
+  Vue.prototype.$EventBus = new Vue();
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  linkActiveClass: "active",
-  linkExactActiveClass: "exact-active",
-  components: {App},
-  template: '<App/>',
-})
+  /* eslint-disable no-new */
+  new Vue({
+    el: '#app',
+    router,
+    linkActiveClass: "active",
+    linkExactActiveClass: "exact-active",
+    components: {App},
+    template: '<App/>'
+  })
+});
+

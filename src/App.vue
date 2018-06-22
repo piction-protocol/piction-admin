@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Navi/>
+    <Provider/>
     <router-view class="container"/>
     <ProgressModal/>
   </div>
@@ -8,14 +9,13 @@
 
 <script>
   import Navi from './components/Navi'
+  import Provider from './components/Provider'
   import ProgressModal from './components/ProgressModal'
 
   export default {
     name: 'App',
-    components: {Navi, ProgressModal},
+    components: {Navi, Provider, ProgressModal},
     methods: {},
-    created() {
-    }
   }
 </script>
 
@@ -24,13 +24,12 @@
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
     color: #2c3e50;
     margin: 0;
   }
 
   .container {
-    margin: 0 auto 70px auto;
+    margin: 12px auto 70px auto;
     max-width: 720px !important;
   }
 </style>
