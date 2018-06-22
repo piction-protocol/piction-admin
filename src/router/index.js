@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Wallet from '@/components/Wallet'
-import PXL from '@/components/admin/pxl/PXL'
-import Whitelist from '@/components/admin/whitelist/Whitelist'
-import Sale from '@/components/admin/sale/Sale'
-import Setting from '@/components/admin/setting/Setting'
+import PXL from '@/components/pxl/PXL'
+import Whitelist from '@/components/whitelist/Whitelist'
+import Sale from '@/components/sale/Sale'
+import Setting from '@/components/setting/Setting'
 
 Vue.use(Router)
 
@@ -18,7 +17,7 @@ const require = async (to, from, next) => {
     invailidPath(to, 'Whitelist', app.localStorageKey.whitelistAddress) ||
     invailidPath(to, 'Sale', app.localStorageKey.saleAddress)) {
     alert('Contract address 를 등록해주세요')
-    return next({path: '/admin/setting'})
+    return next({path: '/setting'})
   } else {
     return next();
   }
@@ -29,33 +28,28 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'Wallet',
-      component: Wallet
+      redirect: '/pxl',
     },
     {
-      path: '/admin',
-      redirect: '/admin/pxl',
-    },
-    {
-      path: '/admin/pxl',
+      path: '/pxl',
       name: 'PXL',
       component: PXL,
       beforeEnter: require
     },
     {
-      path: '/admin/whitelist',
+      path: '/whitelist',
       name: 'Whitelist',
       component: Whitelist,
       beforeEnter: require
     },
     {
-      path: '/admin/sale',
+      path: '/sale',
       name: 'Sale',
       component: Sale,
       beforeEnter: require
     },
     {
-      path: '/admin/setting',
+      path: '/setting',
       name: 'Setting',
       component: Setting
     }

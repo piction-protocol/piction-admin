@@ -7,8 +7,8 @@
 
 <script>
   import Web3 from 'web3'
-  import abi from './../../../assets/abi/Whitelist.json'
-  import Navi from './../Navi'
+  import abi from '../../assets/abi/Whitelist.json'
+  import Navi from '../Navi'
   import List from './List'
   import AddWhitelist from './AddWhitelist'
 
