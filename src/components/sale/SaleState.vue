@@ -64,9 +64,10 @@
         this.$EventBus.$emit('showProgressModal');
         eval(`this.contract.methods.${this.options[this.selected].methodName}()`).send()
           .on('transactionHash', (hash) => {
-            this.transactionHash = hash;
+            this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
           .on('receipt', (receipt) => {
+            this.transactionHash = receipt.transactionHash;
             this.getState();
             this.$EventBus.$emit('hideProgressModal');
           })

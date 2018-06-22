@@ -45,9 +45,10 @@
         var timestamp = new Date().getTime();
         this.contract.methods.setCriterionTime(timestamp).send()
         .on('transactionHash', (hash) => {
-          this.transactionHash = hash;
+          this.$EventBus.$emit('SetMessageProgressModal', hash);
         })
         .on('receipt', (receipt) => {
+          this.transactionHash = receipt.transactionHash;
           this.$EventBus.$emit('hideProgressModal');
           this.getCriterionTime();
         })

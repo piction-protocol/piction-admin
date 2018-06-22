@@ -49,9 +49,10 @@
         this.$EventBus.$emit('showProgressModal');
         this.contract.methods.releaseByCount(this.releaseCount).send()
           .on('transactionHash', (hash) => {
-            this.transactionHash = hash;
+            this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
           .on('receipt', (receipt) => {
+            this.transactionHash = receipt.transactionHash;
             this.$EventBus.$emit('hideProgressModal');
             this.$EventBus.$emit('updateReceipt');
           })
