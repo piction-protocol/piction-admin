@@ -23,6 +23,7 @@
                     :current-page="currentPage"
                     :per-page="perPage"
                     :filter="filter"
+                    :sort-by.sync="sortBy"
                     @filtered="onFiltered">
               <template slot="amount" slot-scope="row">
                 {{ row.value }} PXL
@@ -46,6 +47,11 @@
         <b-row>
           <b-col md="6" class="my-1">
             <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
+          </b-col>
+          <b-col md="6" class="my-1">
+            <b-form-group horizontal label="Per page" class="mb-0">
+              <b-form-select :options="pageOptions" v-model="perPage" />
+            </b-form-group>
           </b-col>
         </b-row>
       </b-container>
