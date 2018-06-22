@@ -8,6 +8,7 @@
           <router-link active-class="active" class="nav-link" to="/pxl">PXL</router-link>
           <router-link active-class="active" class="nav-link" to="/whitelist">WhiteList</router-link>
           <router-link active-class="active" class="nav-link" to="/sale">Sale</router-link>
+          <router-link active-class="active" class="nav-link" to="/tokenDistributor">Distributor</router-link>
           <router-link active-class="active" class="nav-link" to="/setting">Setting</router-link>
         </b-navbar-nav>
       </b-collapse>
