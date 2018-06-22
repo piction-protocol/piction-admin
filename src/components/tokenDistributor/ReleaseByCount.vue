@@ -7,6 +7,11 @@
         갯수별로 Release 합니다.
       </p>
       <b-input-group>
+        <b-form-input id="productAddress"
+                      v-model.trim="productAddress"
+                      type="text"
+                      :state="productAddressState"
+                      placeholder="Product Address"></b-form-input>
         <b-form-input id="releaseCount"
                       v-model.trim="releaseCount"
                       type="number"
@@ -14,7 +19,7 @@
                       placeholder="Count"></b-form-input>
         <b-input-group-append>
           <b-btn variant="info"
-                 :disabled="!releaseCountState"
+                 :disabled="!productAddressState || !releaseCountState"
                  v-on:click="releaseByCount()">실행
           </b-btn>
         </b-input-group-append>
@@ -33,13 +38,17 @@
   export default {
     name: 'DistributorreleaseByCount',
     computed: {
+      productAddressState() {
+        return this.productAddress && this.productAddress.length > 0 ? true : false
+      },
       releaseCountState() {
         return this.releaseCount && this.releaseCount > 0 ? true : false
-      },
+      }
     },
     props: ['contract'],
     data() {
       return {
+        productAddress: null,
         releaseCount: null,
         transactionHash: null,
       }
@@ -47,7 +56,7 @@
     methods: {
       releaseByCount() {
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.releaseByCount(this.releaseCount).send()
+        this.contract.methods.releaseByCount(this.productAddress, this.releaseCount).send()
           .on('transactionHash', (hash) => {
             this.transactionHash = hash;
           })
