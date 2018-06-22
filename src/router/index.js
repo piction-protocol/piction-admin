@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import PXL from '@/components/pxl/PXL'
 import Whitelist from '@/components/whitelist/Whitelist'
 import Sale from '@/components/sale/Sale'
+import TokenDistributor from '@/components/tokenDistributor/TokenDistributor'
 import Setting from '@/components/setting/Setting'
 
 Vue.use(Router)
@@ -15,7 +16,8 @@ const require = async (to, from, next) => {
   const app = await router.app;
   if (invailidPath(to, 'PXL', app.localStorageKey.PXLAddress) ||
     invailidPath(to, 'Whitelist', app.localStorageKey.whitelistAddress) ||
-    invailidPath(to, 'Sale', app.localStorageKey.saleAddress)) {
+    invailidPath(to, 'Sale', app.localStorageKey.saleAddress) ||
+    invailidPath(to, 'TokenDistributor', app.localStorageKey.saleAddress)) {
     alert('Contract address 를 등록해주세요')
     return next({path: '/setting'})
   } else {
@@ -46,6 +48,12 @@ const router = new Router({
       path: '/sale',
       name: 'Sale',
       component: Sale,
+      beforeEnter: require
+    },
+    {
+      path: '/tokenDistributor',
+      name: 'TokenDistributor',
+      component: TokenDistributor,
       beforeEnter: require
     },
     {
