@@ -24,20 +24,13 @@ web3.version.getNetwork((err, netId) => {
       }
     },
     methods: {
-      getEtherscanURL(hash) {
+      getEtherscanURL(path) {
         if (this.network == 'mainnet') {
-          return `https://etherscan.io/tx/${hash}`
+          return `https://etherscan.io${path}`
         } else {
-          return `https://${this.network}.etherscan.io/tx/${hash}`
+          return `https://${this.network}.etherscan.io${path}`
         }
       },
-      getEtherscanURLForAddress(address) {
-        if (this.network == 'mainnet') {
-          return `https://etherscan.io/address/${address}`
-        } else {
-          return `https://${this.network}.etherscan.io/address/${address}`
-        }
-      }
     },
   })
 

@@ -6,7 +6,10 @@
     <ul>
       <li v-for='(whitelist, index) in filterWhitelists(whitelists)'>
         <b-input-group class="whitelist mb-3" size="sm">
-          <b-form-input v-bind:value="whitelist" disabled/>
+          <div class="form-control">
+            <a target="_blank" class="alert-link"
+               v-bind:href="getEtherscanURL('/address/' + whitelist)">{{whitelist}}</a>
+          </div>
           <b-input-group-append>
             <b-btn size="sm" text="Button" variant="danger"
                    v-on:click='deleteWhitelist(index)'>삭제

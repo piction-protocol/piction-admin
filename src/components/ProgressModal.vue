@@ -9,7 +9,7 @@
       <h5>잠시 기다려주세요!</h5>
       <b-progress :value="100" variant="danger" :animated="true"></b-progress>
       <div v-if="transactionHash" class="transaction">
-        <a target="_blank" v-bind:href="getEtherscanURL(transactionHash)">{{transactionHash}}</a>
+        <a target="_blank" v-bind:href="getEtherscanURL('/tx/' + transactionHash)">{{transactionHash}}</a>
       </div>
     </b-modal>
   </div>

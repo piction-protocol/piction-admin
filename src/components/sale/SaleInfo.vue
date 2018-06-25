@@ -1,7 +1,9 @@
 <template>
   <div>
-    <b-alert show align="left">
-      <div>SALE CONTRACT ADDRESS : {{ contractAddress }}</div>
+    <b-alert show>
+      <div>CONTRACT ADDRESS : <a target="_blank" class="alert-link"
+                                 v-bind:href="getEtherscanURL('/address/' + contractAddress)">{{contractAddress}}</a>
+      </div>
     </b-alert>
     <b-alert v-if="productAddress == 0" show variant="danger" align="left">
       <div>등록된 상품이 없습니다.</div>
@@ -10,7 +12,8 @@
       <b-list-group-item align="left">등록 상품 정보</b-list-group-item>
       <b-list-group-item align="left">
         <div>상품명 : {{ productName }}</div>
-        <div>상품 주소 : {{ productAddress }}</div>
+        <div>상품 주소 : <a target="_blank" class="alert-link"
+                        v-bind:href="getEtherscanURL('/address/' + productAddress)">{{ productAddress }}</a></div>
         <div>최대 모집 금액 : {{ productMaxcap }} ETH</div>
         <div>현재 모집 금액 : {{ productWeiRaised }} ETH</div>
         <div>1인당 한정 금액 : {{ productExceed }} ETH</div>

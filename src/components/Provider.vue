@@ -3,7 +3,7 @@
     <b-alert show dismissible fade variant="secondary" class="provider">
       <span class="network">[{{network}}]</span>
       <a target="_blank" class="alert-link"
-         v-bind:href="getEtherscanURLForAddress(account)">{{account}}</a>
+         v-bind:href="getEtherscanURL('/address/' + account)">{{account}}</a>
     </b-alert>
   </div>
 </template>
