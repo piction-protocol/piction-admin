@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card title="Set(Add)Purchased"
+    <b-card title="AddPurchased"
             img-top
             tag="article">
       <p class="card-text">
@@ -46,7 +46,7 @@
   import BigNumber from 'bignumber.js';
 
   export default {
-    name: 'DistributorSetPurchased',
+    name: 'DistributorAddPurchased',
     computed: {
       productAddressState() {
         return this.productAddress && this.productAddress.length > 0 ? true : false
@@ -73,44 +73,13 @@
     },
     methods: {
       writePurchase() {
-        var FIELD_BUYER = 1;
-
         let amount = new BigNumber(this.amount).multipliedBy(new BigNumber(Math.pow(10, 18)));
         let etherAmount = new BigNumber(this.etherAmount).multipliedBy(new BigNumber(Math.pow(10, 18)));
-        var lowerCaseBuyerAddress = String(this.buyerAddress).toLowerCase();
-        this.contract.methods.getAllReceipt().call((err, receiptData) => {
-          var existCount = receiptData[FIELD_BUYER].filter(e => String(e).toLowerCase().includes(lowerCaseBuyerAddress)).length;
-          if (existCount > 0) {
-            this.addPurchased(amount, etherAmount)
-          } else {
-            this.setPurchased(amount, etherAmount)
-          }
-        });
-      },
-      setPurchased(amount, etherAmount) {
-        this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.setPurchased(
-          this.buyerAddress,
-          this.productAddress,
-          amount,
-          etherAmount
-         ).send()
-          .on('transactionHash', (hash) => {
-            this.$EventBus.$emit('SetMessageProgressModal', hash);
-          })
-          .on('receipt', (receipt) => {
-            this.transactionHash = receipt.transactionHash;
-            this.$EventBus.$emit('hideProgressModal');
-            this.$EventBus.$emit('updateReceipt');
-          })
-          .on('error', (err) => {
-            this.$EventBus.$emit('hideProgressModal');
-            alert(err);
-          });
+        this.addPurchased(amount, etherAmount)
       },
       addPurchased(amount, etherAmount) {
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.setPurchased(
+        this.contract.methods.addPurchased(
           this.buyerAddress,
           this.productAddress,
           amount,
@@ -128,7 +97,7 @@
             this.$EventBus.$emit('hideProgressModal');
             alert(err);
           });
-      },
+      }
     }
   }
 </script>

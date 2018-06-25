@@ -4,7 +4,7 @@
     <SetCriterionTime class="component" :contract="distributorContract"/>
     <GetAllReceipt class="component" :contract="distributorContract"/>
     <ReleaseByCount class="component" :contract="distributorContract"/>
-    <SetPurchased class="component" :contract="distributorContract"/>
+    <AddPurchased class="component" :contract="distributorContract"/>
   </div>
 </template>
 
@@ -16,11 +16,11 @@
   import SetCriterionTime from './SetCriterionTime'
   import GetAllReceipt from './GetAllReceipt'
   import ReleaseByCount from './ReleaseByCount'
-  import SetPurchased from './SetPurchased'
+  import AddPurchased from './AddPurchased'
 
   export default {
     name: 'TokenDistributor',
-    components: {AddOwner, SetCriterionTime, GetAllReceipt, ReleaseByCount, SetPurchased},
+    components: {AddOwner, SetCriterionTime, GetAllReceipt, ReleaseByCount, AddPurchased},
     data() {
       return {
         saleContract: null,
