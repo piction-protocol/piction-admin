@@ -77,9 +77,9 @@
 
         let amount = new BigNumber(this.amount).multipliedBy(new BigNumber(Math.pow(10, 18)));
         let etherAmount = new BigNumber(this.etherAmount).multipliedBy(new BigNumber(Math.pow(10, 18)));
-
+        var lowerCaseBuyerAddress = String(this.buyerAddress).toLowerCase();
         this.contract.methods.getAllReceipt().call((err, receiptData) => {
-          var existCount = receiptData[FIELD_BUYER].filter(e => e == this.buyerAddress).length;
+          var existCount = receiptData[FIELD_BUYER].filter(e => String(e).toLowerCase().includes(lowerCaseBuyerAddress)).length;
           if (existCount > 0) {
             this.addPurchased(amount, etherAmount)
           } else {
@@ -117,9 +117,10 @@
           etherAmount
          ).send()
           .on('transactionHash', (hash) => {
-            this.transactionHash = hash;
+            this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
           .on('receipt', (receipt) => {
+            this.transactionHash = receipt.transactionHash;
             this.$EventBus.$emit('hideProgressModal');
             this.$EventBus.$emit('updateReceipt');
           })
