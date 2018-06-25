@@ -138,6 +138,11 @@
         "indexed": false,
         "name": "_to",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "_etherAmount",
+        "type": "uint256"
       }
     ],
     "name": "BuyerAddressTransfer",
@@ -214,7 +219,7 @@
         "type": "uint256"
       }
     ],
-    "name": "setPurchased",
+    "name": "addPurchased",
     "outputs": [
       {
         "name": "",
@@ -226,25 +231,17 @@
     "type": "function"
   },
   {
-    "constant": false,
-    "inputs": [
+    "constant": true,
+    "inputs": [],
+    "name": "getTokenAddress",
+    "outputs": [
       {
-        "name": "_index",
-        "type": "uint256"
-      },
-      {
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "name": "_etherAmount",
-        "type": "uint256"
+        "name": "",
+        "type": "address"
       }
     ],
-    "name": "addPurchased",
-    "outputs": [],
     "payable": false,
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -275,29 +272,6 @@
       }
     ],
     "name": "getEtherAmount",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_buyer",
-        "type": "address"
-      },
-      {
-        "name": "_product",
-        "type": "address"
-      }
-    ],
-    "name": "getId",
     "outputs": [
       {
         "name": "",
@@ -359,6 +333,10 @@
       {
         "name": "",
         "type": "address[]"
+      },
+      {
+        "name": "",
+        "type": "uint256[]"
       },
       {
         "name": "",
@@ -433,6 +411,14 @@
       {
         "name": "_index",
         "type": "uint256"
+      },
+      {
+        "name": "_product",
+        "type": "address"
+      },
+      {
+        "name": "_buyer",
+        "type": "address"
       }
     ],
     "name": "refund",
@@ -471,6 +457,10 @@
       {
         "name": "",
         "type": "bool"
+      },
+      {
+        "name": "",
+        "type": "uint256"
       }
     ],
     "payable": false,
