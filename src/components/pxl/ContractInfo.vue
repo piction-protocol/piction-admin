@@ -1,8 +1,10 @@
 <template>
   <div>
-    <b-alert show align="left">
+    <b-alert show>
       <div>TOTAL SUPPLY : {{totalSupply}} PXL</div>
-      <div>CONTRACT ADDRESS : {{contractAddress}}</div>
+      <div>CONTRACT ADDRESS : <a target="_blank" class="alert-link"
+                                 v-bind:href="getEtherscanURL('/address/' + contractAddress)">{{contractAddress}}</a>
+      </div>
     </b-alert>
   </div>
 </template>

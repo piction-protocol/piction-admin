@@ -1,5 +1,10 @@
 <template>
   <div>
+    <b-alert show>
+      <div>CONTRACT ADDRESS : <a target="_blank" class="alert-link"
+                                 v-bind:href="getEtherscanURL('/address/' + contractAddress)">{{contractAddress}}</a>
+      </div>
+    </b-alert>
     <List class="component" :contract="contract"/>
     <AddWhitelist class="component" :contract="contract"/>
   </div>
@@ -17,13 +22,15 @@
     components: {List, AddWhitelist},
     data() {
       return {
-        contract: null
+        contract: null,
+        contractAddress: null
       }
     },
     created() {
       web3 = new Web3(web3.currentProvider);
       this.contract = new web3.eth.Contract(abi, localStorage.getItem(this.localStorageKey.whitelistAddress));
       web3.eth.getAccounts((err, account) => this.contract.options.from = account[0]);
+      this.contractAddress = localStorage.getItem(this.localStorageKey.whitelistAddress);
     }
   }
 </script>
