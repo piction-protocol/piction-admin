@@ -15,9 +15,10 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col md="12" class="my-1">
+          <b-col class="my-1">
             <b-table show-empty
-                    responsive
+                     responsive
+                     small
                     :items="items"
                     :fields="fields"
                     :current-page="currentPage"
@@ -25,20 +26,21 @@
                     :filter="filter"
                     :sort-by.sync="sortBy"
                     @filtered="onFiltered">
+              <template slot="product" slot-scope="row">
+                <a target="_blank" v-bind:href="getEtherscanURLForAddress(row.value)">{{row.value}}</a>
+              </template>
+              <template slot="buyer" slot-scope="row">
+                <a target="_blank" v-bind:href="getEtherscanURLForAddress(row.value)">{{row.value}}</a>
+              </template>
               <template slot="amount" slot-scope="row">
-                {{ row.value }} PXL
+                {{ row.value }}
               </template>
-              <template slot="etherAmount" slot-scope="row">
-                {{ row.value }} ETH
+              <template slot="ether" slot-scope="row">
+                {{ row.value }}
               </template>
-              <template slot="release" slot-scope="row">
-                <b-btn size="sm" text="Button" variant="danger" :disabled="releaseDisableState(row.item)"
-                       v-on:click='release(row.item)'>{{ row.item.release ? "Released" : "Release" }}
-                </b-btn>
-              </template>
-              <template slot="refund" slot-scope="row">
-                <b-btn size="sm" text="Button" variant="danger" :disabled="refundDisableState(row.item)"
-                       v-on:click='refund(row.item)'>{{ row.item.refund ? "Refunded" : "Refund" }}
+              <template slot="action" slot-scope="row">
+                <b-btn class="release-button" size="sm" text="Button" variant="danger" :disabled="actionDisableState(row.item)"
+                       v-on:click='release(row.item)'>{{ row.item.action == "released" ? "Released" : row.item.action == "refunded" ? "Refunded" : "Release" }}
                 </b-btn>
               </template>
             </b-table>
@@ -62,6 +64,14 @@
 <script>
   import BigNumber from 'bignumber.js';
 
+  const FIELD_PRODUCT  = 0
+  const FIELD_BUYER = 1
+  const FIELD_ID = 2
+  const FIELD_AMOUNT = 3
+  const FIELD_ETHER = 4
+  const FIELD_RELEASE = 5
+  const FIELD_REFUND = 6
+
   export default {
     name: 'DistributorGetAllReceipt',
     props: ['contract'],
@@ -69,12 +79,11 @@
       return {
         fields: [
           { key: 'id', label: 'ID', sortable: true },
-          { key: 'product', label: 'Product', sortable: true },
-          { key: 'buyer', label: 'Buyer', sortable: true },
-          { key: 'amount', label: 'Amount', sortable: true },
-          { key: 'etherAmount', label: 'EtherAmount', sortable: true },
-          { key: 'release', label: 'Release', sortable: true },
-          { key: 'refund', label: 'Refund', sortable: true },
+          { key: 'product', label: 'Product Address', sortable: true },
+          { key: 'buyer', label: 'Buyer Address', sortable: true },
+          { key: 'amount', label: 'PXL', sortable: true, 'class': 'text-right' },
+          { key: 'ether', label: 'ETH', sortable: true, 'class': 'text-right' },
+          { key: 'action', label: 'Action', sortable: true, 'class': 'text-right' }
         ],
         items: [],
         currentPage: 1,
@@ -87,23 +96,10 @@
       }
     },
     methods: {
-      releaseDisableState(item) {
-        var index = this.items.findIndex(e => e.id == item.id)
-        return this.items[index].refund || item.release
-      },
-      refundDisableState(item) {
-        var index = this.items.findIndex(e => e.id == item.id)
-        return this.items[index].release || item.refund
+      actionDisableState(item) {
+        return item.action == "released" || item.action == "refunded"
       },
       getAllReceipt() {
-        const FIELD_PRODUCT  = 0
-        const FIELD_BUYER = 1
-        const FIELD_ID = 2
-        const FIELD_AMOUNT = 3
-        const FIELD_ETHERAMOUNT = 4
-        const FIELD_RELEASE = 5
-        const FIELD_REFUND = 6
-
         this.items = [];
 
         this.contract.methods.getAllReceipt().call((err, receiptData) => {
@@ -114,9 +110,8 @@
               product: receiptData[FIELD_PRODUCT][i],
               buyer: receiptData[FIELD_BUYER][i],
               amount: new BigNumber(receiptData[FIELD_AMOUNT][i]).div(new BigNumber(Math.pow(10, 18))).toNumber(),
-              etherAmount: new BigNumber(receiptData[FIELD_ETHERAMOUNT][i]).div(new BigNumber(Math.pow(10, 18))).toNumber(),
-              release: receiptData[FIELD_RELEASE][i],
-              refund: receiptData[FIELD_REFUND][i]
+              ether: new BigNumber(receiptData[FIELD_ETHER][i]).div(new BigNumber(Math.pow(10, 18))).toNumber(),
+              action: receiptData[FIELD_RELEASE][i] ? "released" : receiptData[FIELD_REFUND][i] ? "refunded" : "none"
             }
             this.items.push(receipt)
           }
@@ -132,24 +127,6 @@
           this.transactionHash = hash;
         })
         .on('receipt', (receipt) => {
-          this.$EventBus.$emit('hideProgressModal');
-          this.getAllReceipt();
-        })
-        .on('error', (err) => {
-          this.$EventBus.$emit('hideProgressModal');
-          alert(err);
-        });
-      },
-      refund(item) {
-        var index = this.items.findIndex(p => p.id == item.id);
-        var contractIndex = index + 1;
-        this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.refund(contractIndex).send()
-        .on('transactionHash', (hash) => {
-          this.$EventBus.$emit('SetMessageProgressModal', hash);
-        })
-        .on('receipt', (receipt) => {
-          this.transactionHash = receipt.transactionHash;
           this.$EventBus.$emit('hideProgressModal');
           this.getAllReceipt();
         })
@@ -177,5 +154,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .my-1 >>> td { font-size: 14px; vertical-align:middle; }
+  .release-button { font-size: 11px; }
 </style>
