@@ -1,8 +1,8 @@
 <template>
   <div>
+    <GetAllReceipt class="component" :contract="distributorContract"/>
     <AddOwner class="component" :contract="distributorContract"/>
     <SetCriterionTime class="component" :contract="distributorContract"/>
-    <GetAllReceipt class="component" :contract="distributorContract"/>
     <ReleaseByCount class="component" :contract="distributorContract"/>
     <AddPurchased class="component" :contract="distributorContract"/>
   </div>
@@ -12,15 +12,15 @@
   import Web3 from 'web3';
   import saleAbi from './../../assets/abi/Sale.json';
   import distributorAbi from './../../assets/abi/TokenDistributor.json'
+  import GetAllReceipt from './GetAllReceipt'
   import AddOwner from './AddOwner'
   import SetCriterionTime from './SetCriterionTime'
-  import GetAllReceipt from './GetAllReceipt'
   import ReleaseByCount from './ReleaseByCount'
   import AddPurchased from './AddPurchased'
 
   export default {
     name: 'TokenDistributor',
-    components: {AddOwner, SetCriterionTime, GetAllReceipt, ReleaseByCount, AddPurchased},
+    components: {GetAllReceipt, AddOwner, SetCriterionTime, ReleaseByCount, AddPurchased},
     data() {
       return {
         saleContract: null,
