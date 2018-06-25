@@ -45,7 +45,7 @@
     },
     methods: {
       addOwner() {
-        this.progress = true;
+        this.$EventBus.$emit('showProgressModal');
         this.contract.methods.addOwner(this.address).send()
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
