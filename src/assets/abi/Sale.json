@@ -197,28 +197,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "name": "_from",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "_id",
-        "type": "uint256"
-      }
-    ],
-    "name": "BuyerAddressTransfer",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "name": "_state",
         "type": "string"
@@ -362,6 +340,10 @@
     "constant": false,
     "inputs": [
       {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
         "name": "_product",
         "type": "address"
       },
@@ -372,13 +354,17 @@
     ],
     "name": "refund",
     "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
+    "payable": true,
+    "stateMutability": "payable",
     "type": "function"
   },
   {
     "constant": false,
     "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
       {
         "name": "_product",
         "type": "address"

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <TokenInfo class="component" :contract="distributorContract"/>
     <GetAllReceipt class="component" :contract="distributorContract"/>
     <AddOwner class="component" :contract="distributorContract"/>
     <SetCriterionTime class="component" :contract="distributorContract"/>
@@ -12,6 +13,7 @@
   import Web3 from 'web3';
   import saleAbi from './../../assets/abi/Sale.json';
   import distributorAbi from './../../assets/abi/TokenDistributor.json'
+  import TokenInfo from './TokenInfo'
   import GetAllReceipt from './GetAllReceipt'
   import AddOwner from './AddOwner'
   import SetCriterionTime from './SetCriterionTime'
@@ -20,7 +22,7 @@
 
   export default {
     name: 'TokenDistributor',
-    components: {GetAllReceipt, AddOwner, SetCriterionTime, ReleaseByCount, AddPurchased},
+    components: {TokenInfo, GetAllReceipt, AddOwner, SetCriterionTime, ReleaseByCount, AddPurchased},
     data() {
       return {
         saleContract: null,
