@@ -32,12 +32,12 @@
                 {{ row.value }} ETH
               </template>
               <template slot="release" slot-scope="row">
-                <b-btn size="sm" text="Button" variant="danger" :disabled="releaseDisableState(row.item, row.index)"
+                <b-btn size="sm" text="Button" variant="danger" :disabled="releaseDisableState(row.item)"
                        v-on:click='release(row.item)'>{{ row.item.release ? "Released" : "Release" }}
                 </b-btn>
               </template>
               <template slot="refund" slot-scope="row">
-                <b-btn size="sm" text="Button" variant="danger" :disabled="refundDisableState(row.item, row.index)"
+                <b-btn size="sm" text="Button" variant="danger" :disabled="refundDisableState(row.item)"
                        v-on:click='refund(row.item)'>{{ row.item.refund ? "Refunded" : "Refund" }}
                 </b-btn>
               </template>
@@ -87,10 +87,12 @@
       }
     },
     methods: {
-      releaseDisableState(item, index) {
+      releaseDisableState(item) {
+        var index = this.items.findIndex(e => e.id == item.id)
         return this.items[index].refund || item.release
       },
-      refundDisableState(item, index) {
+      refundDisableState(item) {
+        var index = this.items.findIndex(e => e.id == item.id)
         return this.items[index].release || item.refund
       },
       getAllReceipt() {
