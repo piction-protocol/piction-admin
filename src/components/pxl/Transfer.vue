@@ -25,7 +25,7 @@
         </b-input-group-append>
       </b-input-group>
       <div v-if="transactionHash">
-        TransactionHash : <a target="_blank" v-bind:href="getEtherscanURL(transactionHash)">{{transactionHash}}</a>
+        TransactionHash : <a target="_blank" v-bind:href="getEtherscanURL('/tx/' + transactionHash)">{{transactionHash}}</a>
       </div>
     </b-card>
   </div>

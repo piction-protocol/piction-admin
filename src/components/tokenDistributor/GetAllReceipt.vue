@@ -27,10 +27,10 @@
                     :sort-by.sync="sortBy"
                     @filtered="onFiltered">
               <template slot="product" slot-scope="row">
-                <a target="_blank" v-bind:href="getEtherscanURLForAddress(row.value)">{{row.value}}</a>
+                <a target="_blank" v-bind:href="getEtherscanURL('/address/' + row.value)">{{row.value}}</a>
               </template>
               <template slot="buyer" slot-scope="row">
-                <a target="_blank" v-bind:href="getEtherscanURLForAddress(row.value)">{{row.value}}</a>
+                <a target="_blank" v-bind:href="getEtherscanURL('/address/' + row.value)">{{row.value}}</a>
               </template>
               <template slot="amount" slot-scope="row">
                 {{ row.value }}
