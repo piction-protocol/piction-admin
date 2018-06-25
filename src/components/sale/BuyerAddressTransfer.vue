@@ -7,6 +7,11 @@
         구매자의 토큰 받을 주소를 변경합니다. (변경될 주소를 미리 Whitelist에 등록해야 합니다.)
       </p>
       <b-input-group>
+        <b-form-input id="receiptId"
+                      v-model.trim="receiptId"
+                      type="number"
+                      :state="receiptIdState"
+                      placeholder="Receipt ID"></b-form-input>
         <b-form-input id="productAddress"
                       v-model.trim="productAddress"
                       type="text"
@@ -16,15 +21,15 @@
                       v-model.trim="fromAddress"
                       type="text"
                       :state="fromAddressState"
-                      placeholder="Address"></b-form-input>
+                      placeholder="From Address"></b-form-input>
         <b-form-input id="toAddress"
                       v-model.trim="toAddress"
                       type="text"
                       :state="toAddressState"
-                      placeholder="Address"></b-form-input>
+                      placeholder="To Address"></b-form-input>
         <b-input-group-append>
           <b-btn variant="info"
-                 :disabled="!productAddressState || !fromAddressState || !toAddressState"
+                 :disabled="!receiptIdState || !productAddressState || !fromAddressState || !toAddressState"
                  v-on:click="transfer()">실행
           </b-btn>
         </b-input-group-append>
@@ -42,6 +47,9 @@
   export default {
     name: 'SaleBuyerAddressTransfer',
     computed: {
+      receiptIdState() {
+        return this.receiptId && this.receiptId > 0 ? true : false
+      },
       productAddressState() {
         return this.productAddress && this.productAddress.length > 0 ? true : false
       },
@@ -55,6 +63,7 @@
     props: ['contract'],
     data() {
       return {
+        receiptId: null,
         productAddress: null,
         fromAddress: null,
         toAddress: null,
@@ -64,10 +73,7 @@
     methods: {
       transfer() {
         this.$EventBus.$emit('showProgressModal');
-        console.log('productAddress: ' + this.productAddress)
-        console.log('from: ' + this.fromAddress)
-        console.log('to: ' + this.toAddress)
-        this.contract.methods.buyerAddressTransfer(this.productAddress, this.fromAddress, this.toAddress).send()
+        this.contract.methods.buyerAddressTransfer(this.receiptId, this.productAddress, this.fromAddress, this.toAddress).send()
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
