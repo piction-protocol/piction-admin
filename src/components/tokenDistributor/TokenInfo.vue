@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-alert show>
-      <div>TOTAL SUPPLY : {{totalSupply}} PXL</div>
+      <div>BALANCEOF : {{ balanceOf }} PXL</div>
       <div>CONTRACT ADDRESS : <a target="_blank" class="alert-link"
                                  v-bind:href="getEtherscanURL('/address/' + contractAddress)">{{contractAddress}}</a>
       </div>
@@ -19,14 +19,14 @@
     data() {
       return {
         tokenContract: null,
-        totalSupply: null,
+        balanceOf: null,
         contractAddress: null,
       }
     },
     methods: {
-      getTotalSupply() {
-        this.tokenContract.methods.totalSupply().call((err, receipt) => {
-          this.totalSupply = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
+      getBalanceOf() {
+        this.tokenContract.methods.balanceOf(this.contractAddress).call((err, receipt) => {
+          this.balanceOf = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
         });
       }
     },
@@ -35,7 +35,7 @@
         this.contractAddress = this.contract.options.address;
         this.contract.methods.getTokenAddress().call((err, tokenAddress) => {
           this.tokenContract = new web3.eth.Contract(tokenAbi, tokenAddress);
-          this.getTotalSupply();
+          this.getBalanceOf();
         });
 
       }
