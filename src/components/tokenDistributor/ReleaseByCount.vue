@@ -4,7 +4,7 @@
             img-top
             tag="article">
       <p class="card-text">
-        갯수별로 Release 합니다.
+        갯수별로 Release 합니다. (최대 30개)
       </p>
       <b-input-group>
         <b-form-input id="productAddress"
@@ -45,7 +45,7 @@
         return this.releaseCount && this.releaseCount > 0 ? true : false
       }
     },
-    props: ['contract'],
+    props: ['contract', 'tokenBalance'],
     data() {
       return {
         productAddress: null,
@@ -55,6 +55,16 @@
     },
     methods: {
       releaseByCount() {
+        if (this.tokenBalance == 0) {
+          alert('TokenDistributor에 Token이 없습니다');
+          return;
+        }
+
+        if (this.releaseCount > 30) {
+          alert('Release 갯수를 30이하로 입력해주세요');
+          return;
+        }
+
         this.$EventBus.$emit('showProgressModal');
         this.contract.methods.releaseByCount(this.productAddress, this.releaseCount).send()
           .on('transactionHash', (hash) => {

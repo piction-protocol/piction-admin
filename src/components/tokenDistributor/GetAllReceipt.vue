@@ -74,7 +74,7 @@
 
   export default {
     name: 'DistributorGetAllReceipt',
-    props: ['contract'],
+    props: ['contract', 'tokenBalance'],
     data() {
       return {
         fields: [
@@ -118,6 +118,11 @@
         });
       },
       release(item) {
+        if (this.tokenBalance == 0) {
+          alert('TokenDistributor에 Token이 없습니다');
+          return;
+        }
+
         var index = this.items.findIndex(p => p.id == item.id);
         var contractIndex = index + 1;
         this.$EventBus.$emit('showProgressModal');
