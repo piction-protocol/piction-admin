@@ -4,7 +4,7 @@
             img-top
             tag="article">
       <p class="card-text">
-        판매 상태를 변경합니다. (현재 상태: {{ selected && options[selected].text }})
+        판매 상태를 변경합니다. (현재 상태: {{ currentState && options[currentState].text }})
       </p>
       <b-input-group>
         <b-form-select v-model="selected">
@@ -41,6 +41,7 @@
     data() {
       return {
         transactionHash: null,
+        currentState: null,
         selected: null,
         options: [
           {value: 0, text: 'Unknown', methodName: null, disable_options: [true, true, true, true, true]},
@@ -57,6 +58,7 @@
           this.options.forEach((option, index) => {
             option.disabled = this.options[stateIndex].disable_options[index];
           });
+          this.currentState = stateIndex;
           this.selected = stateIndex;
         });
       },
