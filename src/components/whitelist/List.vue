@@ -3,6 +3,7 @@
     <b-input-group size="lg" class="search">
       <b-form-input v-model="searchAddress" placeholder="Search Address"></b-form-input>
     </b-input-group>
+    <div class="sum"> 총 {{ whitelists.length }}개</div>
     <ul>
       <li v-for='(whitelist, index) in filterWhitelists(whitelists)'>
         <b-input-group class="whitelist mb-3" size="sm">
@@ -93,6 +94,10 @@
   }
 
   .whitelist {
+    margin-bottom: 5px !important;
+  }
+
+  .sum {
     margin-bottom: 5px !important;
   }
 </style>
