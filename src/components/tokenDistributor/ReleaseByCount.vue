@@ -36,7 +36,7 @@
   import BigNumber from 'bignumber.js';
 
   export default {
-    name: 'DistributorreleaseByCount',
+    name: 'DistributorReleaseByCount',
     computed: {
       productAddressState() {
         return this.productAddress && this.productAddress.length > 0 ? true : false
@@ -74,6 +74,7 @@
             this.transactionHash = receipt.transactionHash;
             this.$EventBus.$emit('hideProgressModal');
             this.$EventBus.$emit('updateReceipt');
+            this.$EventBus.$emit('updateTokenInfo');
           })
           .on('error', (err) => {
             this.$EventBus.$emit('hideProgressModal');

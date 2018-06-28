@@ -133,6 +133,7 @@
         })
         .on('receipt', (receipt) => {
           this.$EventBus.$emit('hideProgressModal');
+          this.$EventBus.$emit('updateTokenInfo');
           this.getAllReceipt();
         })
         .on('error', (err) => {

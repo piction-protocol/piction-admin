@@ -4,7 +4,7 @@
             img-top
             tag="article">
       <p class="card-text">
-        Token Distributor의 주소를 변경합니다.
+        Token Distributor의 주소를 변경합니다. (State가 Unknown, Preparing 또는 Finished일때 가능)<br><b>주의! 부득이한 상황에서만 사용하세요!</b>
       </p>
       <p>현재주소: {{ currentAddress }}</p>
       <b-input-group>

@@ -6,6 +6,7 @@
     <SetCriterionTime class="component" :contract="distributorContract"/>
     <ReleaseByCount class="component" :contract="distributorContract" :tokenBalance="tokenBalance"/>
     <AddPurchased class="component" :contract="distributorContract"/>
+    <WithdrawToken class="component" :contract="distributorContract" :tokenBalance="tokenBalance"/>
   </div>
 </template>
 
@@ -21,13 +22,15 @@
   import SetCriterionTime from './SetCriterionTime'
   import ReleaseByCount from './ReleaseByCount'
   import AddPurchased from './AddPurchased'
+  import WithdrawToken from './WithdrawToken'
 
   export default {
     name: 'TokenDistributor',
-    components: {TokenInfo, GetAllReceipt, AddOwner, SetCriterionTime, ReleaseByCount, AddPurchased},
+    components: {TokenInfo, GetAllReceipt, AddOwner, SetCriterionTime, ReleaseByCount, AddPurchased, WithdrawToken},
     data() {
       return {
         saleContract: null,
+        tokenContract: null,
         distributorContract: null,
         tokenBalance: null,
       }
@@ -38,11 +41,11 @@
           this.saleContract.options.from = accounts[0];
 
           this.distributorContract = new web3.eth.Contract(distributorAbi, distributorAddress);
-          this.distributorContract.options.from = this.saleContract.options.address;
+          this.distributorContract.options.from = accounts[0];
         });
       },
-      getBalanceOf(tokenContract) {
-        tokenContract.methods.balanceOf(this.distributorContract.options.address).call((err, receipt) => {
+      getBalanceOf() {
+        this.tokenContract.methods.balanceOf(this.distributorContract.options.address).call((err, receipt) => {
           this.tokenBalance = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
         });
       }
@@ -50,8 +53,8 @@
     watch: {
       distributorContract() {
         this.distributorContract.methods.getTokenAddress().call((err, tokenAddress) => {
-          var tokenContract = new web3.eth.Contract(tokenAbi, tokenAddress);
-          this.getBalanceOf(tokenContract);
+          this.tokenContract = new web3.eth.Contract(tokenAbi, tokenAddress);
+          this.getBalanceOf();
         });
       }
     },
@@ -61,6 +64,7 @@
       this.saleContract.methods.tokenDistributor().call((err, distributorAddress) => {
         this.getAccount(distributorAddress);
       });
+      this.$EventBus.$on('updateTokenInfo', () => this.getBalanceOf());
     }
   }
 </script>
