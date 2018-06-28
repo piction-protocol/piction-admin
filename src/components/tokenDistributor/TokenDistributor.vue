@@ -30,6 +30,7 @@
     data() {
       return {
         saleContract: null,
+        tokenContract: null,
         distributorContract: null,
         tokenBalance: null,
       }
@@ -40,11 +41,11 @@
           this.saleContract.options.from = accounts[0];
 
           this.distributorContract = new web3.eth.Contract(distributorAbi, distributorAddress);
-          this.distributorContract.options.from = this.saleContract.options.address;
+          this.distributorContract.options.from = accounts[0];
         });
       },
-      getBalanceOf(tokenContract) {
-        tokenContract.methods.balanceOf(this.distributorContract.options.address).call((err, receipt) => {
+      getBalanceOf() {
+        this.tokenContract.methods.balanceOf(this.distributorContract.options.address).call((err, receipt) => {
           this.tokenBalance = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
         });
       }
@@ -52,8 +53,8 @@
     watch: {
       distributorContract() {
         this.distributorContract.methods.getTokenAddress().call((err, tokenAddress) => {
-          var tokenContract = new web3.eth.Contract(tokenAbi, tokenAddress);
-          this.getBalanceOf(tokenContract);
+          this.tokenContract = new web3.eth.Contract(tokenAbi, tokenAddress);
+          this.getBalanceOf();
         });
       }
     },
@@ -63,6 +64,7 @@
       this.saleContract.methods.tokenDistributor().call((err, distributorAddress) => {
         this.getAccount(distributorAddress);
       });
+      this.$EventBus.$on('updateTokenInfo', () => this.getBalanceOf());
     }
   }
 </script>

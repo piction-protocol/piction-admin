@@ -74,6 +74,7 @@
             this.transactionHash = receipt.transactionHash;
             this.$EventBus.$emit('hideProgressModal');
             this.$EventBus.$emit('updateReceipt');
+            this.$EventBus.$emit('updateTokenInfo');
           })
           .on('error', (err) => {
             this.$EventBus.$emit('hideProgressModal');
