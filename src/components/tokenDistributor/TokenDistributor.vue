@@ -6,6 +6,7 @@
     <SetCriterionTime class="component" :contract="distributorContract"/>
     <ReleaseByCount class="component" :contract="distributorContract" :tokenBalance="tokenBalance"/>
     <AddPurchased class="component" :contract="distributorContract"/>
+    <WithdrawToken class="component" :contract="distributorContract" :tokenBalance="tokenBalance"/>
   </div>
 </template>
 
@@ -21,10 +22,11 @@
   import SetCriterionTime from './SetCriterionTime'
   import ReleaseByCount from './ReleaseByCount'
   import AddPurchased from './AddPurchased'
+  import WithdrawToken from './WithdrawToken'
 
   export default {
     name: 'TokenDistributor',
-    components: {TokenInfo, GetAllReceipt, AddOwner, SetCriterionTime, ReleaseByCount, AddPurchased},
+    components: {TokenInfo, GetAllReceipt, AddOwner, SetCriterionTime, ReleaseByCount, AddPurchased, WithdrawToken},
     data() {
       return {
         saleContract: null,
