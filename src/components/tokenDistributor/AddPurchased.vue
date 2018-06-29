@@ -58,7 +58,7 @@
         return this.amount && this.amount > 0 ? true : false
       },
       etherAmountState() {
-        return this.etherAmount && this.etherAmount > 0 ? true : false
+        return this.etherAmount ? true : false
       },
     },
     props: ['contract'],
