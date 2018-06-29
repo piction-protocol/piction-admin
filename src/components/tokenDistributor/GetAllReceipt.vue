@@ -13,9 +13,12 @@
               </b-input-group-append>
             </b-input-group>
           </b-col>
+          <b-col md="6" class="needToken">
+            <p> 배포 시 필요한 토큰 {{ getSendToken }} </p>
+          </b-col>
         </b-row>
         <b-row>
-          <b-col class="my-1">
+          <b-col class="receiptTable">
             <b-table show-empty
                      responsive
                      small
@@ -74,6 +77,21 @@
 
   export default {
     name: 'DistributorGetAllReceipt',
+    computed: {
+      getSendToken() {
+        var sendToken = 0;
+        this.items.forEach(e => {
+          if (!e.release && !e.refund) {
+            sendToken += e.amount;
+          }
+        });
+        if (sendToken == 0) {
+          return "없음"
+        } else {
+          return " : " + sendToken + " PXL"
+        }
+      }
+    },
     props: ['contract', 'tokenBalance'],
     data() {
       return {
@@ -123,6 +141,11 @@
           return;
         }
 
+        if (this.tokenBalance < item.amount) {
+          alert('배포할 Token이 현재 가지고 있는 Token보다 적습니다');
+          return;
+        }
+
         var index = this.items.findIndex(p => p.id == item.id);
         var contractIndex = index + 1;
         this.$EventBus.$emit('showProgressModal');
@@ -160,6 +183,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .my-1 >>> td { font-size: 14px; vertical-align:middle; }
+  .receiptTable >>> td { font-size: 14px; vertical-align: middle; }
   .release-button { font-size: 11px; }
+  .needToken { font-size: 17px; vertical-align: middle; text-align: right;}
 </style>
