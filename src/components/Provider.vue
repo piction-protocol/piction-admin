@@ -19,7 +19,6 @@
       }
     },
     created() {
-      web3 = new Web3(web3.currentProvider);
       web3.eth.getAccounts((err, _account) => {
         this.account = _account[0]
         web3.currentProvider.publicConfigStore.on('update', (provider) => {

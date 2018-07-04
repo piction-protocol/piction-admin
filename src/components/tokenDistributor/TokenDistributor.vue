@@ -59,7 +59,6 @@
       }
     },
     created() {
-      web3 = new Web3(web3.currentProvider);
       this.saleContract = new web3.eth.Contract(saleAbi, localStorage.getItem(this.localStorageKey.saleAddress));
       this.saleContract.methods.tokenDistributor().call((err, distributorAddress) => {
         this.getAccount(distributorAddress);

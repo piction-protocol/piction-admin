@@ -8,6 +8,7 @@
 </template>
 
 <script>
+  import Web3 from 'web3'
   import Navi from './components/Navi'
   import Provider from './components/Provider'
   import ProgressModal from './components/ProgressModal'
@@ -16,6 +17,9 @@
     name: 'App',
     components: {Navi, Provider, ProgressModal},
     methods: {},
+    created() {
+      web3 = new Web3(web3.currentProvider);
+    }
   }
 </script>
 
