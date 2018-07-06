@@ -5,8 +5,8 @@
                                  v-bind:href="getEtherscanURL('/address/' + contractAddress)">{{contractAddress}}</a>
       </div>
     </b-alert>
-    <List class="component" :contract="contract"/>
-    <AddWhitelist class="component" :contract="contract"/>
+    <List class="component"/>
+    <AddWhitelist class="component"/>
   </div>
 </template>
 
@@ -22,14 +22,10 @@
     components: {List, AddWhitelist},
     data() {
       return {
-        contract: null,
         contractAddress: null
       }
     },
     created() {
-      web3 = new Web3(web3.currentProvider);
-      this.contract = new web3.eth.Contract(abi, localStorage.getItem(this.localStorageKey.whitelistAddress));
-      web3.eth.getAccounts((err, account) => this.contract.options.from = account[0]);
       this.contractAddress = localStorage.getItem(this.localStorageKey.whitelistAddress);
     }
   }

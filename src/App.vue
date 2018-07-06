@@ -13,6 +13,8 @@
   import ProgressModal from './components/ProgressModal'
 
   import PXL from './contracts/PXL'
+  import Whitelist from './contracts/Whitelist'
+
   export default {
     name: 'App',
     components: {Navi, Provider, ProgressModal},
@@ -20,6 +22,7 @@
     created() {
       web3 = new Web3(web3.currentProvider);
       PXL.init();
+      Whitelist.init();
     }
   }
 </script>
