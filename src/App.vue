@@ -12,10 +12,15 @@
   import Provider from './components/Provider'
   import ProgressModal from './components/ProgressModal'
 
+  import PXL from './contracts/PXL'
   export default {
     name: 'App',
     components: {Navi, Provider, ProgressModal},
     methods: {},
+    created() {
+      web3 = new Web3(web3.currentProvider);
+      PXL.init();
+    }
   }
 </script>
 

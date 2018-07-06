@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
+  import PXL from '../../contracts/PXL'
 
   export default {
     name: 'PXLBurn',
@@ -37,7 +37,6 @@
         return parseInt(this.amount) > 0 ? true : false
       },
     },
-    props: ['contract'],
     data() {
       return {
         amount: null,
@@ -47,8 +46,7 @@
     methods: {
       burn() {
         this.$EventBus.$emit('showProgressModal');
-        let amount = new BigNumber(this.amount).multipliedBy(new BigNumber(Math.pow(10, 18)));
-        this.contract.methods.burn(amount).send()
+        PXL.burn(this.amount)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
