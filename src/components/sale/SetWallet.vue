@@ -29,6 +29,8 @@
 </template>
 
 <script>
+  import Sale from '../../contracts/Sale'
+
   export default {
     name: 'SaleSetWallet',
     computed: {
@@ -36,7 +38,6 @@
         return this.address && this.address.length > 0 ? true : false
       },
     },
-    props: ['contract'],
     data() {
       return {
         currentAddress: null,
@@ -45,14 +46,12 @@
       }
     },
     methods: {
-      getWalletAddress() {
-        this.currentAddress = this.contract.methods.wallet().call((err, receipt) => {
-          this.currentAddress = receipt;
-        });
+      async getWalletAddress() {
+        this.currentAddress = await Sale.getWalletAddress()
       },
       setWallet() {
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.setWallet(this.address).send()
+        Sale.setWallet(this.address)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })

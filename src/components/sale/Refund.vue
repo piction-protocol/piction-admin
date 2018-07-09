@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
+  import Sale from '../../contracts/Sale'
 
   export default {
     name: 'SaleRefund',
@@ -60,7 +60,6 @@
         return this.refundAmount && this.refundAmount > 0 ? true : false
       }
     },
-    props: ['contract'],
     data() {
       return {
         receiptId: null,
@@ -73,8 +72,7 @@
     methods: {
       transfer() {
         this.$EventBus.$emit('showProgressModal');
-        let etherAmount = new BigNumber(this.refundAmount).multipliedBy(new BigNumber(Math.pow(10, 18)));
-        this.contract.methods.refund(this.receiptId, this.productAddress, this.buyerAddress).send({ value: etherAmount })
+        Sale.refund(this.refundAmount, this.receiptId, this.productAddress, this.buyerAddress)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
