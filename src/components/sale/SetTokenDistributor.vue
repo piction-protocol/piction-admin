@@ -29,6 +29,8 @@
 </template>
 
 <script>
+  import Sale from '../../contracts/Sale'
+
   export default {
     name: 'SaleSetTokenDistributor',
     computed: {
@@ -36,7 +38,6 @@
         return this.address && this.address.length > 0 ? true : false
       },
     },
-    props: ['contract'],
     data() {
       return {
         currentAddress: null,
@@ -45,14 +46,12 @@
       }
     },
     methods: {
-      getTokenDistributorAddress() {
-        this.currentAddress = this.contract.methods.tokenDistributor().call((err, receipt) => {
-          this.currentAddress = receipt;
-        });
+      async getTokenDistributorAddress() {
+        this.currentAddress = await Sale.getTokenDistributorAddress()
       },
       setWallet() {
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.setTokenDistributor(this.address).send()
+        Sale.setTokenDistributor(this.address)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })

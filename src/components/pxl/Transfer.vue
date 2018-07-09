@@ -32,7 +32,7 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
+  import PXL from '../../contracts/PXL'
 
   export default {
     name: 'PXLTransfer',
@@ -44,7 +44,6 @@
         return parseInt(this.amount) > 0 ? true : false
       }
     },
-    props: ['contract'],
     data() {
       return {
         address: null,
@@ -55,8 +54,7 @@
     methods: {
       transfer() {
         this.$EventBus.$emit('showProgressModal');
-        let amount = new BigNumber(this.amount).multipliedBy(new BigNumber(Math.pow(10, 18)));
-        this.contract.methods.transfer(this.address, amount).send()
+        PXL.transfer(address, amount)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })

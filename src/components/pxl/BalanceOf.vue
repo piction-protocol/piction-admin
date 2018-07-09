@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
+  import PXL from '../../contracts/PXL';
 
   export default {
     name: 'PXLBalanceOf',
@@ -34,7 +34,6 @@
         return this.address && this.address.length > 0 ? true : false
       },
     },
-    props: ['contract'],
     data() {
       return {
         address: null,
@@ -42,10 +41,8 @@
       }
     },
     methods: {
-      balanceOf() {
-        this.contract.methods.balanceOf(this.address).call((err, receipt) => {
-          this.amount = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
-        });
+      async balanceOf() {
+        this.amount = await PXL.balanceOf(this.address);
       }
     }
   }
