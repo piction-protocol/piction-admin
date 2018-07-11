@@ -18,7 +18,6 @@
 <script>
   export default {
     name: 'WhitelistAdd',
-    props: ['contract'],
     data() {
       return {
         whitelists: [],
@@ -39,7 +38,7 @@
           return;
         }
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.addAddressesToWhitelist(whitelist).send()
+        this.$contract.whitelist.addWhitelists(whitelists)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
