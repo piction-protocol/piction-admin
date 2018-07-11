@@ -71,7 +71,7 @@
       getSendToken() {
         var sendToken = 0;
         this.items.forEach(e => {
-          if (!e.release && !e.refund) {
+          if (e.action == "none") {
             sendToken += e.amount;
           }
         });
@@ -118,7 +118,7 @@
           return;
         }
 
-        if (this.tokenBalance < item.amount) {
+        if (tokenBalance < item.amount) {
           alert('배포할 Token이 현재 가지고 있는 Token보다 적습니다');
           return;
         }
