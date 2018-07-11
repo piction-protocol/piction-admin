@@ -36,7 +36,6 @@
         return this.address && this.address.length > 0 ? true : false
       },
     },
-    props: ['contract'],
     data() {
       return {
         currentAddress: null,
@@ -45,16 +44,14 @@
       }
     },
     methods: {
-      getProductAddress() {
-        this.currentAddress = this.contract.methods.product().call((err, receipt) => {
-          this.currentAddress = receipt
-        });
+      async getProductAddress() {
+        this.currentAddress = await this.$contract.sale.getProductAddress()
       },
       registerProduct() {
         // state가 preparing이거나 finish일 때만 변경가능해야 함.
         // isRegistered에 등록안되서 true가 아니어야 함
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.registerProduct(this.address).send()
+        this.$contract.sale.registerProduct(this.address)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })

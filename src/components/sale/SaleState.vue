@@ -37,7 +37,6 @@
         return this.picked != this.state ? true : false
       },
     },
-    props: ['contract'],
     data() {
       return {
         transactionHash: null,
@@ -53,18 +52,16 @@
       }
     },
     methods: {
-      getState() {
-        this.contract.methods.getState().call((err, stateIndex) => {
-          this.options.forEach((option, index) => {
-            option.disabled = this.options[stateIndex].disable_options[index];
-          });
-          this.currentState = stateIndex;
-          this.selected = stateIndex;
+      async getState() {
+        const stateIndex = await this.$contract.sale.getState()
+
+        this.options.forEach((option, index) => {
+          option.disabled = this.options[stateIndex].disable_options[index];
         });
       },
       changeState() {
         this.$EventBus.$emit('showProgressModal');
-        eval(`this.contract.methods.${this.options[this.selected].methodName}()`).send()
+        this.$contract.sale.setState(this.options[this.selected].methodName)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })

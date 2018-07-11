@@ -36,7 +36,6 @@
         return this.address && this.address.length > 0 ? true : false
       },
     },
-    props: ['contract'],
     data() {
       return {
         currentAddress: null,
@@ -45,14 +44,12 @@
       }
     },
     methods: {
-      getWhitelistAddress() {
-        this.currentAddress = this.contract.methods.whiteList().call((err, receipt) => {
-          this.currentAddress = receipt;
-        });
+      async getWhitelistAddress() {
+        this.currentAddress = await this.$contract.sale.getWhitelistAddress()
       },
       setWhitelist() {
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.setWhitelist(this.address).send()
+        this.$contract.sale.setWhitelist(this.address)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
