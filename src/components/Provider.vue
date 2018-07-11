@@ -18,17 +18,9 @@
         account: null,
       }
     },
-    created() {
-      web3 = new Web3(web3.currentProvider);
-      web3.eth.getAccounts((err, _account) => {
-        this.account = _account[0]
-        web3.currentProvider.publicConfigStore.on('update', (provider) => {
-          if (this.account.toLowerCase() != provider.selectedAddress.toLowerCase()) {
-            window.location.reload()
-          }
-        });
-      });
-    },
+    async created() {
+      this.account = await this.$root.account
+    }
   }
 </script>
 

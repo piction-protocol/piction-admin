@@ -21,7 +21,12 @@ const require = async (to, from, next) => {
     alert('Contract address 를 등록해주세요')
     return next({path: '/setting'})
   } else {
-    return next();
+    const checkContract = setInterval(function() {
+      if (Vue.prototype.$contract.tokenDistributor != undefined && Vue.prototype.$contract.product != undefined) {
+        clearInterval(checkContract)
+        return next();
+      }
+    }, 500);
   }
 }
 

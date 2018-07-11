@@ -14,8 +14,7 @@
 
   export default {
     name: 'App',
-    components: {Navi, Provider, ProgressModal},
-    methods: {},
+    components: {Navi, Provider, ProgressModal}
   }
 </script>
 
