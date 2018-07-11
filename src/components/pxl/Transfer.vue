@@ -50,15 +50,23 @@
       }
     },
     methods: {
-      transfer() {
+      async transfer() {
+        const totalSupply = await this.$contract.pxl.totalSupply()
+
+        if (this.amount > totalSupply) {
+          alert('현재 Token보다 입력된 값이 많습니다.');
+          return;
+        }
+
         this.$EventBus.$emit('showProgressModal');
-        this.$contract.pxl.transfer(address, amount)
+        this.$contract.pxl.transfer(this.address, this.amount)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
           .on('receipt', (receipt) => {
             this.transactionHash = receipt.transactionHash;
             this.$EventBus.$emit('hideProgressModal');
+            this.$EventBus.$emit('setTotalSupply');
           })
           .on('error', (err) => {
             this.$EventBus.$emit('hideProgressModal');
