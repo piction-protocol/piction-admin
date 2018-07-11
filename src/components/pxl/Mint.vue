@@ -27,8 +27,6 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
-
   export default {
     name: 'PXLMint',
     computed: {
@@ -36,7 +34,6 @@
         return parseInt(this.amount) > 0 ? true : false
       },
     },
-    props: ['contract'],
     data() {
       return {
         amount: null,
@@ -46,8 +43,7 @@
     methods: {
       mint() {
         this.$EventBus.$emit('showProgressModal');
-        let amount = new BigNumber(this.amount).multipliedBy(new BigNumber(Math.pow(10, 18)));
-        this.contract.methods.mint(amount).send()
+        this.$contract.pxl.mint(this.amount)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })

@@ -10,11 +10,8 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
-
   export default {
     name: 'PXLContractInfo',
-    props: ['contract'],
     data() {
       return {
         totalSupply: null,
@@ -22,10 +19,8 @@
       }
     },
     methods: {
-      getTotalSupply() {
-        this.contract.methods.totalSupply().call((err, receipt) => {
-          this.totalSupply = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
-        });
+      async getTotalSupply() {
+        this.totalSupply = await this.$contract.pxl.totalSupply()
       }
     },
     created() {
