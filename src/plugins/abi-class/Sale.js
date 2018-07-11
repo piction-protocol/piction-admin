@@ -11,7 +11,7 @@ class Sale extends Contract {
   }
 
   setState(methodName) {
-    return eval(`this._contract.${methodName}()`).send()
+    return eval(`this._contract.methods.${methodName}()`).send()
   }
 
   buyerAddressTransfer(receiptId, productAddress, fromAddress, toAddress) {

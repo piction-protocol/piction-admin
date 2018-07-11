@@ -58,6 +58,8 @@
         this.options.forEach((option, index) => {
           option.disabled = this.options[stateIndex].disable_options[index];
         });
+        this.currentState = stateIndex;
+        this.selected = stateIndex;
       },
       changeState() {
         this.$EventBus.$emit('showProgressModal');
