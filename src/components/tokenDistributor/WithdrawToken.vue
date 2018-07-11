@@ -8,7 +8,6 @@
       </p>
       <b-input-group>
         <b-btn variant="info"
-               :disabled="!tokenState"
                v-on:click="withdrawToken()">실행
         </b-btn>
       </b-input-group>
@@ -21,31 +20,25 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
-
   export default {
     name: 'DistributorWithdrawToken',
-    computed: {
-      tokenState() {
-        return this.token && this.token > 0 ? true : false
-      }
-    },
-    props: ['contract', 'tokenBalance'],
     data() {
       return {
-        token: null,
         transactionHash: null,
       }
     },
     methods: {
-      withdrawToken() {
-        if (this.token == 0) {
+      async withdrawToken() {
+        const tokenDistributorAddress = await this.$contract.sale.getTokenDistributorAddress();
+        const tokenBalance = await this.$contract.pxl.balanceOf(tokenDistributorAddress)
+
+        if (tokenBalance == 0) {
           alert('TokenDistributor에 Token이 없습니다');
           return;
         }
 
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.withdrawToken().send()
+        this.$contract.tokenDistributor.withdrawToken()
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
@@ -53,17 +46,11 @@
             this.transactionHash = receipt.transactionHash;
             this.$EventBus.$emit('hideProgressModal');
             this.$EventBus.$emit('updateTokenInfo');
-            this.token = 0;
           })
           .on('error', (err) => {
             this.$EventBus.$emit('hideProgressModal');
             alert(err);
           });
-      }
-    },
-    watch: {
-      tokenBalance() {
-        this.token = this.tokenBalance;
       }
     }
   }

@@ -30,7 +30,7 @@
         <b-input-group-append>
           <b-btn variant="info"
                  :disabled="!productAddressState || !buyerAddressState || !amountState || !etherAmountState"
-                 v-on:click="writePurchase()">실행
+                 v-on:click="addPurchase()">실행
           </b-btn>
         </b-input-group-append>
       </b-input-group>
@@ -43,8 +43,6 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
-
   export default {
     name: 'DistributorAddPurchased',
     computed: {
@@ -61,7 +59,6 @@
         return this.etherAmount ? true : false
       },
     },
-    props: ['contract'],
     data() {
       return {
         productAddress: null,
@@ -72,19 +69,9 @@
       }
     },
     methods: {
-      writePurchase() {
-        let amount = new BigNumber(this.amount).multipliedBy(new BigNumber(Math.pow(10, 18)));
-        let etherAmount = new BigNumber(this.etherAmount).multipliedBy(new BigNumber(Math.pow(10, 18)));
-        this.addPurchased(amount, etherAmount)
-      },
       addPurchased(amount, etherAmount) {
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.addPurchased(
-          this.buyerAddress,
-          this.productAddress,
-          amount,
-          etherAmount
-         ).send()
+        this.$contract.tokenDistributor.addPurchased(this.buyerAddress, this.productAddress, this.amount, this.etherAmount)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })

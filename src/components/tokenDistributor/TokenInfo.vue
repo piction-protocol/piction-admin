@@ -10,20 +10,23 @@
 </template>
 
 <script>
-  import tokenAbi from '../../assets/abi/PXL.json';
-
   export default {
     name: 'TokenDistributorTokenInfo',
-    props: ['contract', 'tokenBalance'],
     data() {
       return {
+        tokenBalance: null,
         contractAddress: null,
       }
     },
-    watch: {
-      contract() {
-        this.contractAddress = this.contract.options.address;
+    methods: {
+      async getBalanceOf() {
+        this.contractAddress = await this.$contract.sale.getTokenDistributorAddress();
+        this.tokenBalance = await this.$contract.pxl.balanceOf(this.contractAddress)
       }
+    },
+    async created() {
+      this.getBalanceOf()
+      this.$EventBus.$on('updateTokenInfo', () => this.getBalanceOf());
     }
   }
 </script>
