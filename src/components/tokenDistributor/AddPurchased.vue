@@ -30,7 +30,7 @@
         <b-input-group-append>
           <b-btn variant="info"
                  :disabled="!productAddressState || !buyerAddressState || !amountState || !etherAmountState"
-                 v-on:click="addPurchase()">실행
+                 v-on:click="addPurchased()">실행
           </b-btn>
         </b-input-group-append>
       </b-input-group>

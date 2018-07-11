@@ -14,10 +14,10 @@ class TokenDistributor extends Contract {
     return this._contract.methods.addOwner(saleAddress).send()
   }
 
-  addPurchase(buyerAddress, productAddress, pxlAmount, etherAmount) {
+  addPurchased(buyerAddress, productAddress, pxlAmount, etherAmount) {
     const pxl = new BigNumber(pxlAmount).multipliedBy(new BigNumber(Math.pow(10, 18)));
     const ether = new BigNumber(etherAmount).multipliedBy(new BigNumber(Math.pow(10, 18)));
-    return this._contract.methods.addPurchase(buyerAddress, productAddress, pxl, ether).send()
+    return this._contract.methods.addPurchased(buyerAddress, productAddress, pxl, ether).send()
   }
 
   releaseByCount(productAddress, releaseCount) {
