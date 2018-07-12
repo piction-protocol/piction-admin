@@ -32,7 +32,6 @@
       return {
         contractAddress: null,
         productAddress: null,
-        productContract: null,
         productName: '',
         productMaxcap: 0,
         productWeiRaised: 0,

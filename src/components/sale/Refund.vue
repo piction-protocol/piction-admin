@@ -26,7 +26,7 @@
                       v-model.trim="refundAmount"
                       type="number"
                       :state="refundAmountState"
-                      placeholder="Refund Amount"></b-form-input>
+                      placeholder="Refund Ether"></b-form-input>
         <b-input-group-append>
           <b-btn variant="info"
                  :disabled="!receiptIdState || !productAddressState || !buyerAddressState || !refundAmountState"
