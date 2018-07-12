@@ -65,23 +65,13 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
-
-  const FIELD_PRODUCT  = 0
-  const FIELD_BUYER = 1
-  const FIELD_ID = 2
-  const FIELD_AMOUNT = 3
-  const FIELD_ETHER = 4
-  const FIELD_RELEASE = 5
-  const FIELD_REFUND = 6
-
   export default {
     name: 'DistributorGetAllReceipt',
     computed: {
       getSendToken() {
         var sendToken = 0;
         this.items.forEach(e => {
-          if (!e.release && !e.refund) {
+          if (e.action == "none") {
             sendToken += e.amount;
           }
         });
@@ -92,7 +82,6 @@
         }
       }
     },
-    props: ['contract', 'tokenBalance'],
     data() {
       return {
         fields: [
@@ -117,39 +106,28 @@
       actionDisableState(item) {
         return item.action == "released" || item.action == "refunded"
       },
-      getAllReceipt() {
-        this.items = [];
-
-        this.contract.methods.getAllReceipt().call((err, receiptData) => {
-          var numReceipt = receiptData[0].length;
-          for (let i = 0; i < numReceipt; i++) {
-            const receipt = {
-              id: receiptData[FIELD_ID][i],
-              product: receiptData[FIELD_PRODUCT][i],
-              buyer: receiptData[FIELD_BUYER][i],
-              amount: new BigNumber(receiptData[FIELD_AMOUNT][i]).div(new BigNumber(Math.pow(10, 18))).toNumber(),
-              ether: new BigNumber(receiptData[FIELD_ETHER][i]).div(new BigNumber(Math.pow(10, 18))).toNumber(),
-              action: receiptData[FIELD_RELEASE][i] ? "released" : receiptData[FIELD_REFUND][i] ? "refunded" : "none"
-            }
-            this.items.push(receipt)
-          }
-        });
+      async getAllReceipt() {
+        this.items = await this.$contract.tokenDistributor.getAllReceipt()
       },
-      release(item) {
-        if (this.tokenBalance == 0) {
+      async release(item) {
+        const tokenDistributorAddress = await this.$contract.sale.getTokenDistributorAddress();
+        const tokenBalance = await this.$contract.pxl.balanceOf(tokenDistributorAddress)
+
+        if (tokenBalance == 0) {
           alert('TokenDistributor에 Token이 없습니다');
           return;
         }
 
-        if (this.tokenBalance < item.amount) {
+        if (tokenBalance < item.amount) {
           alert('배포할 Token이 현재 가지고 있는 Token보다 적습니다');
           return;
         }
 
         var index = this.items.findIndex(p => p.id == item.id);
         var contractIndex = index + 1;
+
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.release(contractIndex).send()
+        this.$contract.tokenDistributor.release(contractIndex)
         .on('transactionHash', (hash) => {
           this.$EventBus.$emit('SetMessageProgressModal', hash);
           this.transactionHash = hash;
@@ -164,18 +142,14 @@
           alert(err);
         });
       },
-      onFiltered (filteredItems) {
+      onFiltered(filteredItems) {
         // Trigger pagination to update the number of buttons/pages due to filtering
         this.totalRows = filteredItems.length
         this.currentPage = 1
       }
     },
-    watch: {
-      contract() {
-        this.getAllReceipt();
-      }
-    },
     created() {
+      this.getAllReceipt();
       this.$EventBus.$on('updateReceipt', () => this.getAllReceipt());
     }
   }

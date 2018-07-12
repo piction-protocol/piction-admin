@@ -23,7 +23,6 @@
 <script>
   export default {
     name: 'PXLUnlock',
-    props: ['contract'],
     data() {
       return {
         isLocked: false,
@@ -31,14 +30,12 @@
       }
     },
     methods: {
-      getLockState() {
-        this.contract.methods.getTokenTransferable().call((err, receipt) => {
-          this.isLocked = !receipt;
-        });
+      async getLockState() {
+        this.isLocked = await this.$contract.pxl.getLockState()
       },
       unlock() {
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.unlock().send()
+        this.$contract.pxl.unlock()
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })

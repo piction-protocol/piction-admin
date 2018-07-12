@@ -25,7 +25,6 @@
 <script>
   export default {
     name: 'WhitelistList',
-    props: ['contract'],
     data() {
       return {
         whitelists: [],
@@ -33,27 +32,13 @@
       }
     },
     methods: {
-      getEventWhitelist() {
-        this.contract.getPastEvents('WhitelistedAddressAdded', {
-          fromBlock: 0,
-          toBlock: 'latest'
-        }, (error, events) => {
-          var addedAddresses = [];
-          events.forEach(obj => {
-            var address = obj.returnValues[0];
-            this.contract.methods.whitelist(address).call((err, result) => {
-              if (result) {
-                addedAddresses.push(address);
-                this.whitelists = Array.from(new Set(addedAddresses));
-              }
-            })
-          })
-        })
+      async getEventWhitelist() {
+        this.whitelists = await this.$contract.whitelist.getWhitelist()
       },
       deleteWhitelist(index) {
         this.$EventBus.$emit('showProgressModal');
         let address = this.whitelists[index];
-        this.contract.methods.removeAddressFromWhitelist(address).send()
+        this.$contract.whitelist.removeAddressFromWhitelist(address)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })

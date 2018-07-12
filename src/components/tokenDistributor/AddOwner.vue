@@ -35,7 +35,6 @@
         return this.saleAddress && this.saleAddress.length > 0 ? true : false
       }
     },
-    props: ['contract'],
     data() {
       return {
         saleAddress: null,
@@ -45,7 +44,7 @@
     methods: {
       addOwner() {
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.addOwner(this.saleAddress).send()
+        this.$contract.tokenDistributor.addOwner(this.saleAddress)
         .on('transactionHash', (hash) => {
           this.$EventBus.$emit('SetMessageProgressModal', hash);
         })

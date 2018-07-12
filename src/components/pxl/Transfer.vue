@@ -32,8 +32,6 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
-
   export default {
     name: 'PXLTransfer',
     computed: {
@@ -44,7 +42,6 @@
         return parseInt(this.amount) > 0 ? true : false
       }
     },
-    props: ['contract'],
     data() {
       return {
         address: null,
@@ -53,16 +50,23 @@
       }
     },
     methods: {
-      transfer() {
+      async transfer() {
+        const totalSupply = await this.$contract.pxl.totalSupply()
+
+        if (this.amount > totalSupply) {
+          alert('현재 Token보다 입력된 값이 많습니다.');
+          return;
+        }
+
         this.$EventBus.$emit('showProgressModal');
-        let amount = new BigNumber(this.amount).multipliedBy(new BigNumber(Math.pow(10, 18)));
-        this.contract.methods.transfer(this.address, amount).send()
+        this.$contract.pxl.transfer(this.address, this.amount)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
           .on('receipt', (receipt) => {
             this.transactionHash = receipt.transactionHash;
             this.$EventBus.$emit('hideProgressModal');
+            this.$EventBus.$emit('setTotalSupply');
           })
           .on('error', (err) => {
             this.$EventBus.$emit('hideProgressModal');

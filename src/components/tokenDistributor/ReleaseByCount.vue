@@ -33,8 +33,6 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
-
   export default {
     name: 'DistributorReleaseByCount',
     computed: {
@@ -45,7 +43,6 @@
         return this.releaseCount && this.releaseCount > 0 ? true : false
       }
     },
-    props: ['contract', 'tokenBalance'],
     data() {
       return {
         productAddress: null,
@@ -54,8 +51,13 @@
       }
     },
     methods: {
-      releaseByCount() {
-        if (this.tokenBalance == 0) {
+      async releaseByCount() {
+        const tokenDistributorAddress = await this.$contract.sale.getTokenDistributorAddress();
+        const tokenBalance = await this.$contract.pxl.balanceOf(tokenDistributorAddress)
+        const list = await this.$contract.tokenDistributor.getAllReceipt()
+        const filterList = list.filter(e => e.product == this.productAddress && e.action == "none")
+
+        if (tokenBalance == 0) {
           alert('TokenDistributor에 Token이 없습니다');
           return;
         }
@@ -65,8 +67,13 @@
           return;
         }
 
+        if (filterList.length < this.releaseCount) {
+          alert('Release가능한 갯수가 입력한 갯수보다 적습니다.');
+          return;
+        }
+
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.releaseByCount(this.productAddress, this.releaseCount).send()
+        this.$contract.tokenDistributor.releaseByCount(this.productAddress, this.releaseCount)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })

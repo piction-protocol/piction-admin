@@ -38,7 +38,6 @@
         return new Date(Number(this.registedCriterionTime)).toLocaleString();
       }
     },
-    props: ['contract'],
     data() {
       return {
         criterionDateTime: null,
@@ -47,15 +46,13 @@
       }
     },
     methods: {
-      getCriterionTime() {
-        this.contract.methods.criterionTime().call((err, receipt) => {
-          this.registedCriterionTime = receipt
-        })
+      async getCriterionTime() {
+        this.registedCriterionTime = await this.$contract.tokenDistributor.getCriterionTime();
       },
       setCriterionTime() {
-        var timestamp = Date.parse(criterionDateTime.value)
+        const timestamp = Date.parse(criterionDateTime.value)
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.setCriterionTime(timestamp).send()
+        this.$contract.tokenDistributor.setCriterionTime(timestamp)
         .on('transactionHash', (hash) => {
           this.$EventBus.$emit('SetMessageProgressModal', hash);
         })
@@ -70,10 +67,8 @@
         });
       }
     },
-    watch: {
-      contract() {
-        this.getCriterionTime();
-      }
+    created() {
+      this.getCriterionTime();
     }
   }
 </script>

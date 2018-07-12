@@ -27,8 +27,6 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
-
   export default {
     name: 'PXLAddOwner',
     computed: {
@@ -36,7 +34,6 @@
         return this.address && this.address.length > 0 ? true : false
       }
     },
-    props: ['contract'],
     data() {
       return {
         address: null,
@@ -46,7 +43,7 @@
     methods: {
       addOwner() {
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.addOwner(this.address).send()
+        this.$contract.pxl.addOwner(this.address)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })

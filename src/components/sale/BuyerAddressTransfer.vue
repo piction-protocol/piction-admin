@@ -42,8 +42,6 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
-
   export default {
     name: 'SaleBuyerAddressTransfer',
     computed: {
@@ -60,7 +58,6 @@
         return this.toAddress && this.toAddress.length > 0 ? true : false
       }
     },
-    props: ['contract'],
     data() {
       return {
         receiptId: null,
@@ -73,7 +70,7 @@
     methods: {
       transfer() {
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.buyerAddressTransfer(this.receiptId, this.productAddress, this.fromAddress, this.toAddress).send()
+        this.$contract.sale.buyerAddressTransfer(this.receiptId, this.productAddress, this.fromAddress, this.toAddress)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })

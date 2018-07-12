@@ -26,17 +26,12 @@
 </template>
 
 <script>
-  import BigNumber from 'bignumber.js';
-  import productAbi from '../../assets/abi/Product.json'
-
   export default {
     name: 'SaleInfo',
-    props: ['contract'],
     data() {
       return {
         contractAddress: null,
         productAddress: null,
-        productContract: null,
         productName: '',
         productMaxcap: 0,
         productWeiRaised: 0,
@@ -50,55 +45,33 @@
       getSaleAddress() {
         this.contractAddress = localStorage.getItem(this.localStorageKey.saleAddress);
       },
-      getProductAddress() {
-        this.contract.methods.product().call((err, productAddress) => {
-          this.productAddress = productAddress;
-        });
+      async getProductAddress() {
+        this.productAddress = await this.$contract.sale.getProductAddress()
       },
-      getProductContract() {
-        this.productContract = new web3.eth.Contract(productAbi, this.productAddress);
+      async getProductName() {
+        this.productName = await this.$contract.product.getProductName()
       },
-      getProductName() {
-        this.productContract.methods.name().call((err, receipt) => {
-          this.productName = receipt;
-        });
+      async getMaxcap() {
+        this.productMaxcap = await this.$contract.product.getMaxcap()
       },
-      getMaxcap() {
-        this.productContract.methods.maxcap().call((err, receipt) => {
-          this.productMaxcap = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
-        })
+      async getWeiRaised() {
+        this.productWeiRaised = await this.$contract.sale.getProductWeiRaised(this.productAddress)
       },
-      getWeiRaised() {
-        this.contract.methods.getProductWeiRaised(this.productAddress).call((err, receipt) => {
-          this.productWeiRaised = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
-        })
+      async getExceed() {
+        this.productExceed = await this.$contract.product.getExceed()
       },
-      getExceed() {
-        this.productContract.methods.exceed().call((err, receipt) => {
-          this.productExceed = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
-        })
+      async getMinimum() {
+        this.productMinimum = await this.$contract.product.getMinimum()
       },
-      getMinimum() {
-        this.productContract.methods.minimum().call((err, receipt) => {
-          this.productMinimum = new BigNumber(receipt).div(new BigNumber(Math.pow(10, 18))).toNumber();
-        })
+      async getRate() {
+        this.productRate = await this.$contract.product.getRate()
       },
-      getRate() {
-        this.productContract.methods.rate().call((err, receipt) => {
-          this.productRate = receipt;
-        })
-      },
-      getLockup() {
-        this.productContract.methods.lockup().call((err, receipt) => {
-          this.productLockup = receipt;
-        })
+      async getLockup() {
+        this.productLockup = await this.$contract.product.getLockup()
       }
     },
     watch: {
       productAddress() {
-        this.getProductContract();
-      },
-      productContract() {
         this.getProductName();
         this.getMaxcap();
         this.getWeiRaised();

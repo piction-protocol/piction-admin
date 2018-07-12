@@ -18,7 +18,6 @@
 <script>
   export default {
     name: 'WhitelistAdd',
-    props: ['contract'],
     data() {
       return {
         whitelists: [],
@@ -32,14 +31,14 @@
     },
     methods: {
       addWhitelists(event) {
-        var whitelist = this.inputAddress.split(/\n/);
+        var whitelists = this.inputAddress.split(/\n/);
 
-        if (whitelist.length > 30) {
+        if (whitelists.length > 30) {
           alert('최대 30개의 주소까지 추가할 수 있습니다');
           return;
         }
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.addAddressesToWhitelist(whitelist).send()
+        this.$contract.whitelist.addWhitelists(whitelists)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })

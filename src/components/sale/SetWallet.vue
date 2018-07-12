@@ -36,7 +36,6 @@
         return this.address && this.address.length > 0 ? true : false
       },
     },
-    props: ['contract'],
     data() {
       return {
         currentAddress: null,
@@ -45,14 +44,12 @@
       }
     },
     methods: {
-      getWalletAddress() {
-        this.currentAddress = this.contract.methods.wallet().call((err, receipt) => {
-          this.currentAddress = receipt;
-        });
+      async getWalletAddress() {
+        this.currentAddress = await this.$contract.sale.getWalletAddress()
       },
       setWallet() {
         this.$EventBus.$emit('showProgressModal');
-        this.contract.methods.setWallet(this.address).send()
+        this.$contract.sale.setWallet(this.address)
           .on('transactionHash', (hash) => {
             this.$EventBus.$emit('SetMessageProgressModal', hash);
           })
